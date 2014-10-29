@@ -1,8 +1,9 @@
-CFLAGS = -ffreestanding -fbuiltin -Wall -Wextra -nostdlib -m32 -Iinclude
-
+CC = i386-elf-gcc
+CFLAGS = -ffreestanding -O2 -Wall -Wextra -nostdlib -Iinclude
 OBJS = kernel.o tty.o ioprim.o gdt.o idt.o string.o desctbls.o interrupts.o isr.o timer.o kb.o panic.o kmain.o
 
-kernel: $(OBJS)
+kernel: $(OBJS) link.ld
+	$(CC) -T link.ld -o kernel $(CFLAGS) -lgcc $(OBJS)
 	ld -m elf_i386 -T link.ld -o kernel $(OBJS)
 
 %.o: %.c
