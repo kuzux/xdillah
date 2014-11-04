@@ -5,9 +5,14 @@
 isr_t handlers[256];
 
 void isr_handler(registers_t regs){
-    tty_puts("unhandled interrupt: ");
-    tty_puthex(regs.intno);
-    tty_putch('\n');
+    if(handlers[regs.intno] != 0){
+        isr_t handler = handlers[regs.intno];
+        handler(regs);
+    } else {
+        tty_puts("unhandled interrupt: ");
+        tty_puthex(regs.intno);
+        tty_putch('\n');
+    }
 }
 
 void irq_handler(registers_t regs){

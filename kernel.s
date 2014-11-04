@@ -29,6 +29,7 @@ _start:
     mov esp, stack_top
 
     extern kmain
+    push ebx ;; load the multiboot header
     call kmain
 
     cli   ;; clear interrupts

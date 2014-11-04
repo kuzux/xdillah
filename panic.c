@@ -6,5 +6,6 @@ void panic(char* msg){
     tty_puts(msg);
     tty_putch('\n');
 
+    asm volatile ("cli");
     for(;;);
 }

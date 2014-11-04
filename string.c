@@ -26,6 +26,7 @@ void* memmove(void* __restrict dest, const void* __restrict src, size_t len){
 
     return dest;
 }
+
 void* memset(void* buf, int val, size_t len){
     uint8_t* bufp = (uint8_t*) buf;
 

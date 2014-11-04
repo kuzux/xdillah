@@ -16,7 +16,8 @@
 *  whatever you want using a macro, if you wish! */
 uint8_t kbdus[128] =
 {
-    0,  27, '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
+    0,  27, /* Escape */
+    '1', '2', '3', '4', '5', '6', '7', '8', /* 9 */
   '9', '0', '-', '=', '\b', /* Backspace */
   '\t',         /* Tab */
   'q', 'w', 'e', 'r',   /* 19 */
@@ -55,7 +56,8 @@ uint8_t kbdus[128] =
 };
 
 uint8_t kbdus_shift[128] = {
-    0,  27, '!', '@', '#', '$', '%', '^', '&', '*', /* 9 */
+    0,  27, /* Escape */
+    '!', '@', '#', '$', '%', '^', '&', '*', /* 9 */
   '(', ')', '_', '+', '\b', /* Backspace */
   '\t',         /* Tab */
   'Q', 'W', 'E', 'R',   /* 19 */
@@ -101,6 +103,7 @@ static void kb_handler(){
     scancode = inb(0x60);
 
     if(scancode & 0x80){
+        // key released
         scancode &= (~0x80);
         if(scancode == SC_CTRL){
             kbstat.ctrl = 0;
