@@ -3,7 +3,8 @@ CFLAGS = -ffreestanding -O2 -Wall -Wextra -nostdlib -Iinclude
 
 OBJS = kernel.o kmain.o tty.o ioprim.o gdt.o idt.o \
        string.o desctbls.o interrupts.o isr.o \
-       timer.o kb.o panic.o paging.o kheap.o bitmap.o
+       timer.o kb.o panic.o paging.o kheap.o bitmap.o \
+       kprintf.o
 
 kernel: $(OBJS) link.ld
 	$(CC) -T link.ld -o kernel $(CFLAGS) -lgcc $(OBJS)

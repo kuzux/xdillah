@@ -83,17 +83,22 @@ void tty_putxy(char c, int i, int j){
     tty_buf[i * VGA_WIDTH + j] = make_vgaentry(c, tty_color);
 }
 
-void tty_puts(char* s){
+size_t tty_puts(const char* s){
+    size_t res = 0;
+
     while (*s){
         tty_putch(*s);
+        res++;
         s++;
     }
+
+    return res;
 }
 
-void tty_putdec(uint32_t n){
+size_t tty_putdec(uint32_t n){
     if (n == 0){
         tty_putch('0');
-        return;
+        return 1;
     }
 
     int32_t acc = n;
@@ -112,13 +117,14 @@ void tty_putdec(uint32_t n){
     while(i >= 0){
         c2[i--] = c[j++];
     }
-    tty_puts(c2);
+    return tty_puts(c2);
 }
 
-void tty_puthex(uint32_t n){
+size_t tty_puthex(uint32_t n){
     int32_t tmp;
 
     tty_puts("0x");
+    size_t res = 0;
 
     char noZeroes = 1;
 
@@ -129,6 +135,7 @@ void tty_puthex(uint32_t n){
             continue;
         }
     
+        res++;
         if (tmp >= 0xA){
             noZeroes = 0;
             tty_putch(tmp-0xA+'a');
@@ -140,10 +147,13 @@ void tty_puthex(uint32_t n){
     }
   
     tmp = n & 0xF;
+    res++;
     if (tmp >= 0xA){
         tty_putch(tmp-0xA+'a');
     }
     else{
         tty_putch(tmp+'0');
     }
+
+    return res;
 }

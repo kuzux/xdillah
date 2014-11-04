@@ -8,9 +8,11 @@
 #include <kb.h>
 #include <multiboot.h>
 #include <paging.h>
+#include <kprintf.h>
 
 void kmain(multiboot_info_t *mbd){
-    char* str = "ello vorld\nbeya\n";
+    char* str1 = "ello vorld";
+    char* str2 = "beya";
 
     gdt_init();
     idt_init();
@@ -21,12 +23,12 @@ void kmain(multiboot_info_t *mbd){
     timer_init(50);
     kb_init();
 
-    tty_puts(str);
+    kprintf("%s\n%s\n", str1, str2);
 
     uint32_t *ptr = (uint32_t*)0x00100000;
     uint32_t do_page_fault = *ptr;
 
-    tty_putdec(do_page_fault);
+    kprintf("%x\n", do_page_fault);
 
     // asm volatile("int $0xd");
  
