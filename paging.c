@@ -5,6 +5,7 @@
 #include <string.h>
 #include <panic.h>
 #include <isr.h>
+#include <kprintf.h>
 
 uint32_t *frames;
 uint32_t nframes;
@@ -35,8 +36,9 @@ void alloc_frame(page_t* page, int kernel, int write){
     if(page->frame) return; // page already has a frame
 
     uint32_t alloc = next_page();
-    if(alloc == (uint32_t)-1) panic("No more frames!");
 
+    if(alloc == (uint32_t)-1) panic("No more frames!");
+    
     bitmap_set(frames, alloc);
 
     page->present = 1;
@@ -100,7 +102,7 @@ page_t* get_page(uint32_t addr, int make, page_directory_t* dir){
         memset(dir->tables[table_id], 0, 0x1000);
 
         dir->tables_phys[table_id] = tmp | 0x7;
-
+        
         return &dir->tables[table_id]->pages[page_off];
     } else {
         return 0;
@@ -108,5 +110,24 @@ page_t* get_page(uint32_t addr, int make, page_directory_t* dir){
 }
 
 void page_fault(registers_t regs){
+    uint32_t faulting_address;
+    asm volatile("mov %%cr2, %0" : "=r" (faulting_address));
+
+    // The error code gives us details of what happened.
+    int present  = !(regs.errcode & 0x1); // Page not present
+    int rw       = regs.errcode & 0x2;    // Write operation?
+    int us       = regs.errcode & 0x4;    // Processor was in user-mode?
+    int reserved = regs.errcode & 0x8;    // Overwritten CPU-reserved bits of page entry?
+    int id      = regs.errcode & 0x10;    // Caused by an instruction fetch?
+
+    // Output an error message.
+    kprintf("Page fault! ( ");
+    if (present){ kprintf("present "); }
+    if (rw){ kprintf("read-only "); }
+    if (us){ kprintf("user-mode "); }
+    if (reserved){ kprintf("reserved "); }
+    kprintf(") at %x\n", faulting_address);
+
     panic("page fault");
+
 }
