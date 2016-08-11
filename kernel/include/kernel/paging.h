@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <isr.h>
+#include <kernel/isr.h>
 
 typedef struct page {
     uint32_t present  : 1;   // 1 if present

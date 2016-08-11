@@ -1,7 +1,7 @@
-#include <kb.h>
-#include <isr.h>
-#include <tty.h>
-#include <ioprim.h>
+#include <kernel/kb.h>
+#include <kernel/isr.h>
+#include <kernel/tty.h>
+#include <kernel/ioprim.h>
 
 #define SC_CTRL 29
 #define SC_LSHIFT 42

@@ -1,4 +1,4 @@
-#include <bitmap.h>
+#include <kernel/bitmap.h>
 
 #define BIT_OFFSET(x) (x%32)
 #define BIT_INDEX(x) (x/32)

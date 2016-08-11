@@ -1,6 +1,6 @@
-#include <idt.h>
+#include <kernel/idt.h>
 #include <string.h>
-#include <ioprim.h>
+#include <kernel/ioprim.h>
 
 idt_entry_t idt_entries[256];
 idt_ptr_t idt_ptr;

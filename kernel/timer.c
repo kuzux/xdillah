@@ -1,8 +1,8 @@
-#include <timer.h>
-#include <ioprim.h>
-#include <panic.h>
-#include <isr.h>
-#include <tty.h>
+#include <kernel/timer.h>
+#include <kernel/ioprim.h>
+#include <stdlib.h>
+#include <kernel/isr.h>
+#include <kernel/tty.h>
 
 uint32_t tick = 0;
 
@@ -16,7 +16,7 @@ static void timer_cb(){
 void timer_init(uint32_t freq){
     if(freq <= 18){
         // divisor needs to fit in 16 bytes, which requires freq > 18
-        panic("timer frequency set too small");
+        printf("%s\n", "timer frequency set too small");
     }
 
     register_interrupt_handler(IRQ0, timer_cb);

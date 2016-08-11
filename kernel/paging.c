@@ -1,11 +1,11 @@
-#include <paging.h>
-#include <bitmap.h>
-#include <tty.h>
-#include <kheap.h>
+#include <kernel/paging.h>
+#include <kernel/bitmap.h>
+#include <kernel/tty.h>
+#include <kernel/kheap.h>
 #include <string.h>
-#include <panic.h>
-#include <isr.h>
-#include <kprintf.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <kernel/isr.h>
 
 uint32_t *frames;
 uint32_t nframes;
@@ -37,7 +37,10 @@ void alloc_frame(page_t* page, int kernel, int write){
 
     uint32_t alloc = next_page();
 
-    if(alloc == (uint32_t)-1) panic("No more frames!");
+    if(alloc == (uint32_t)-1){
+        printf("%s\n", "No more frames!");
+        abort();
+    }
     
     bitmap_set(frames, alloc);
 
@@ -121,13 +124,13 @@ void page_fault(registers_t regs){
     int id      = regs.errcode & 0x10;    // Caused by an instruction fetch?
 
     // Output an error message.
-    kprintf("Page fault! ( ");
-    if (present){ kprintf("present "); }
-    if (rw){ kprintf("read-only "); }
-    if (us){ kprintf("user-mode "); }
-    if (reserved){ kprintf("reserved "); }
-    kprintf(") at %x\n", faulting_address);
+    printf("Page fault! ( ");
+    if (present){ printf("present "); }
+    if (rw){ printf("read-only "); }
+    if (us){ printf("user-mode "); }
+    if (reserved){ printf("reserved "); }
+    printf(") at %x\n", faulting_address);
 
-    panic("page fault");
+    abort();
 
 }

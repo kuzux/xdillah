@@ -1,1 +1,5 @@
 Xdillah is a kernel written just for fun, at this point, it does pretty much nothing. :)
+
+INSTALLATION
+
+Compile cross gcc and binutils for i686-elf (or i386-elf) and have them on the path. Also requires nasm and make(obviously), make the sh scripts on the main folder executable if they aren't already. qemu is optional, if you have any other ways to run it(create an iso with grub command line tools and whatever), you're free to try.

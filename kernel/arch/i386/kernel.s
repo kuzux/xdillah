@@ -29,6 +29,12 @@ _start:
     mov esp, stack_top
 
     extern kmain
+    extern _init
+    extern kearly
+
+    call kearly
+    call _init
+
     push ebx ;; load the multiboot header
     call kmain
 

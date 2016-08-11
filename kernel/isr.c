@@ -1,6 +1,6 @@
-#include <isr.h>
-#include <tty.h>
-#include <ioprim.h>
+#include <kernel/isr.h>
+#include <kernel/tty.h>
+#include <kernel/ioprim.h>
 
 isr_t handlers[256];
 

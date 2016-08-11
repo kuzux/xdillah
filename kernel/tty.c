@@ -1,7 +1,7 @@
-#include <tty.h>
-#include <vga.h>
+#include <kernel/tty.h>
+#include <kernel/vga.h>
 #include <stdbool.h>
-#include <ioprim.h>
+#include <kernel/ioprim.h>
 
 size_t tty_row;
 size_t tty_column;
