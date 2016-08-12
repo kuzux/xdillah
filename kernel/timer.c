@@ -1,5 +1,6 @@
 #include <kernel/timer.h>
 #include <kernel/ioprim.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <kernel/isr.h>
 #include <kernel/tty.h>

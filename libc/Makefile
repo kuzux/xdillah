@@ -13,7 +13,7 @@ INCLUDEDIR?=$(PREFIX)/include
 LIBDIR?=$(EXEC_PREFIX)/lib
  
 CFLAGS:=$(CFLAGS) -Wall -Wextra
-CPPFLAGS:=$(CPPFLAGS) -D__is_xdillah_libc -Iinclude
+CPPFLAGS:=$(CPPFLAGS) -D__is_xdillah_libc -Iinclude -I../kernel/include
 LIBK_CFLAGS:=$(CFLAGS) -ffreestanding -fbuiltin
 LIBK_CPPFLAGS:=$(CPPFLAGS) -D__is_xdillah_kernel
  

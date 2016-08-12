@@ -69,9 +69,11 @@ size_t strcspn(const char* __restrict str1, const char* __restrict str2){
     return 0;
 }
 
+static char** errcodes = { 0 };
+
 char* strerror(int errcode){
-    // todo: implement error codes
-    return NULL;
+    if(errcodes[errcode]) return errcodes[errcode];
+    else return NULL;
 }
 
 const char* strrchr(const char* ptr, int value){
@@ -89,16 +91,16 @@ const char* strrchr(const char* ptr, int value){
 
 size_t strspn(const char* __restrict str1, const char* __restrict str2){
     size_t i, j;
-    char* res1 = NULL;
-    char* res2 = NULL;
+    size_t res1 = 0;
+    size_t res2 = 0;
 
     i = 0;
     while(str1[i]){
         j = 0;
         while(str2[j]){
             if(str1[i]==str2[j]){
-                if(!res1) res1 = str1+i;
-                res2 = str1+i;
+                if(!res1) res1 = i;
+                res2 = i;
             }
             j++;
         }

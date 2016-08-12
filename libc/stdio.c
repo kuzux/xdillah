@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#if defined(__is_myos_kernel)
+#if defined(__is_xdillah_kernel)
 #include <kernel/tty.h>
 #endif
 
