@@ -30,7 +30,11 @@ FREEOBJS:=\
 $(ARCH_FREEOBJS) \
 stdio.o \
 stdlib.o \
-string.o \
+string/mem.o \
+string/str.o \
+string/strn.o \
+string/strpbrk.o \
+string/strtok.o \
 
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \
