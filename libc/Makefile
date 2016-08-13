@@ -29,7 +29,14 @@ LIBK_CPPFLAGS:=$(LIBK_CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 FREEOBJS:=\
 $(ARCH_FREEOBJS) \
 stdio.o \
-stdlib.o \
+stdlib/ato.o \
+stdlib/strto.o \
+stdlib/rand.o \
+stdlib/alloc.o \
+stdlib/env.o \
+stdlib/arrays.o \
+stdlib/arith.o \
+stdlib/wchar.o \
 string/mem.o \
 string/str.o \
 string/strn.o \

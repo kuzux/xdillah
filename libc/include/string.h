@@ -9,6 +9,10 @@
 extern "C" {
 #endif
 
+#ifndef NULL
+#define NULL 0
+#endif
+
 int memcmp(const void* __restrict ptr1, const void* __restrict ptr2, size_t len);
 void* memcpy(void* __restrict dest, const void* __restrict src, size_t len);
 void* memmove(void* __restrict dest, const void* __restrict src, size_t len);
