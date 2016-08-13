@@ -32,8 +32,6 @@ void kmain(multiboot_info_t *mbd){
     uint32_t do_page_fault = *ptr;
 
     printf("%x\n", do_page_fault);
-
-    // asm volatile("int $0xe");
  
     for(;;);
     
