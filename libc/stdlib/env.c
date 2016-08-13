@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// assume there won't be more atexit stuff than 255
+// todo: implement a vector or a linked list for that
 void (*exit_funcs[255])(void);
 void (*quickexit_funcs[255])(void);
 

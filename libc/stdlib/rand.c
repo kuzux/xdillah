@@ -13,3 +13,5 @@ int rand(void){
 void srand(unsigned int seed){
     prev = seed;
 }
+
+// todo: maybe implement mtrand?

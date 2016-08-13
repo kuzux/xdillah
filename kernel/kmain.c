@@ -8,12 +8,14 @@
 #include <kernel/kb.h>
 #include <kernel/multiboot.h>
 #include <kernel/paging.h>
+#include <kernel/serial.h>
 #include <stdio.h>
 
 void kearly(){
     gdt_init();
     idt_init();
     tty_init();
+    serial_init(COM1);
 }
 
 void kmain(multiboot_info_t *mbd){
@@ -28,10 +30,11 @@ void kmain(multiboot_info_t *mbd){
 
     printf("%s\n%s\n", str1, str2);
 
-    uint32_t *ptr = (uint32_t*)0xA0000000;
-    uint32_t do_page_fault = *ptr;
+    //uint32_t *ptr = (uint32_t*)0xA0000000;
+    //uint32_t do_page_fault = *ptr;
 
-    printf("%x\n", do_page_fault);
+    //printf("%x\n", do_page_fault);
+    puts_serial("serial test\n", COM1);
  
     for(;;);
     
