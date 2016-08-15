@@ -12,9 +12,7 @@ uint32_t nframes;
 
 // defined in kheap.c
 extern uint32_t placement_address;
-
-page_directory_t *curr_dir;
-page_directory_t *kernel_dir;
+extern heap_t* kheap; 
 
 uint32_t next_page(){
     int i, n, lim;
@@ -67,8 +65,18 @@ void paging_init(uint32_t memsize){
     frames = (uint32_t*) kmalloc(nframes/32);
     memset(frames, 0, nframes/8);
 
-    uint32_t acc = 0;
-    page_t* page;
+    // Map some pages in the kernel heap area.
+    // Here we call get_page but not alloc_frame. This causes page_table_t's
+    // to be created where necessary. We can't allocate frames yet because they
+    // they need to be identity mapped first below, and yet we can't increase
+    // placement_address between identity mapping and enabling the heap!
+    int i = 0;
+    for (i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000)
+        get_page(i, 1, kernel_dir);
+
+     uint32_t acc = 0;
+     page_t* page;
+
 
     while(acc < placement_address){
         page = get_page(acc, 1, kernel_dir);
@@ -76,6 +84,8 @@ void paging_init(uint32_t memsize){
 
         acc += 0x1000;
     }
+    for (i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000)
+        alloc_frame(get_page(i, 1, kernel_dir), 0, 0);
 
     register_interrupt_handler(0xe, page_fault);
 

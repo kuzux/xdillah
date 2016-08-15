@@ -30,11 +30,16 @@ typedef struct page_directory {
     uint32_t phys_addr;
 } page_directory_t;
 
+page_directory_t *curr_dir;
+page_directory_t *kernel_dir;
+
 // memory size in kbytes;
 void paging_init(uint32_t memsize);
 void switch_page_directory(page_directory_t *dir);
 // if make == 1, create the page if it's not present
 page_t *get_page(uint32_t addr, int make, page_directory_t *dir);
+
+void alloc_frame(page_t* page, int kernel, int write);
 
 void page_fault(registers_t regs);
 

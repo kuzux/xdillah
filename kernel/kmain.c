@@ -19,7 +19,11 @@ void kearly(){
 }
 
 void kmain(multiboot_info_t *mbd){
+    void* a = kmalloc(8);
     paging_init(mbd->mem_upper*1024);
+    void* b = kmalloc(8);
+    void* c = kmalloc(8);
+    
     asm volatile("sti");
 
     timer_init(50);
@@ -29,6 +33,8 @@ void kmain(multiboot_info_t *mbd){
     char* str2 = "page test";
 
     printf("%s\n%s\n", str1, str2);
+
+    printf("kmalloc test a:%x b:%x c:%x\n", a, b, c);
 
     //uint32_t *ptr = (uint32_t*)0xA0000000;
     //uint32_t do_page_fault = *ptr;
