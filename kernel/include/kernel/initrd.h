@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 #include <kernel/multiboot.h>
 #include <kernel/fs.h>
 

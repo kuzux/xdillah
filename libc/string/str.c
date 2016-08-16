@@ -50,8 +50,10 @@ int strcoll(const char* __restrict ptr1, const char* __restrict ptr2){
 
 char* strcpy(char* __restrict dest, const char* __restrict src){
     size_t i = 0;
-    while(src[i]) dest[i] = src[i];
-
+    while(src[i]){ 
+        dest[i] = src[i];
+        i++;
+    }
     return dest;
 }
 
