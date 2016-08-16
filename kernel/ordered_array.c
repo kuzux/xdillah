@@ -27,9 +27,7 @@ ordered_array_t place_ordered_array(void *addr, uint32_t max_size, lessthan_pred
 }
 
 void destroy_ordered_array(ordered_array_t *array){
-    // commenting out for now because of the circular dependency issue with kheap
-    // todo: we need to fix this some day
-    // kfree(array->array);
+    kfree(array->array);
 }
 
 void insert_ordered_array(type_t item, ordered_array_t *array){

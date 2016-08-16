@@ -23,7 +23,7 @@ typedef struct lldiv_t {
     long long int rem;
 } lldiv_t;
 
-#define NULL 0
+#define NULL ((void*)0)
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 #define MB_CUR_MAX 65535

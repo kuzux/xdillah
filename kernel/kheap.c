@@ -235,7 +235,7 @@ void* alloc_heap(uint32_t size, uint8_t page_align, heap_t* heap){
 
 
     // ...And we're done!
-    return (void *) ((uint32_t)block_header+sizeof(header_t));
+    return (void *)((uint32_t)block_header+sizeof(header_t));
 }
 
 void free_heap(void* ptr, heap_t* heap){
@@ -351,7 +351,7 @@ void* kmalloc(size_t sz) {
     if(kheap!=NULL){
         return alloc_heap(sz, 0, kheap);
     } else {
-        return kmalloc_bootstrap(sz, 0, 0);
+        return (void*)(kmalloc_bootstrap(sz, 0, 0));
     }
 }
 

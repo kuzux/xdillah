@@ -10,7 +10,7 @@ extern "C" {
 #endif
 
 #ifndef NULL
-#define NULL 0
+#define NULL ((void*)0)
 #endif
 
 int memcmp(const void* __restrict ptr1, const void* __restrict ptr2, size_t len);

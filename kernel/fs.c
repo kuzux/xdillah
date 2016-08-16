@@ -18,33 +18,29 @@ uint32_t write_fs(fs_node_t* node, uint32_t offset, uint32_t size, uint8_t* buf)
     }
 }
 
-uint32_t open_fs(fs_node_t* node){
+void open_fs(fs_node_t* node){
     if(node->open){
-        return node->open(node);
-    } else {
-        return 0;
+        node->open(node);
     }
 }
 
-uint32_t close_fs(fs_node_t* node){
+void close_fs(fs_node_t* node){
     if(node->close){
-        return node->close(node);
-    } else {
-        return 0;
+        node->close(node);
     }
 }
 
 struct dirent* readdir_fs(fs_node_t* node, uint32_t idx){
-    if(node->readdir&& (node&FS_DIRECTORY) != 0){
-        return node->readdir(node);
+    if(node->readdir&& (node->flags&FS_DIRECTORY) != 0){
+        return node->readdir(node, idx);
     } else {
         return NULL;
     }
 }
 
 fs_node_t* finddir_fs(fs_node_t* node, char* name){
-    if(node->finddir&& (node&FS_DIRECTORY) != 0){
-        return node-finddir(name);
+    if(node->finddir&& (node->flags&FS_DIRECTORY) != 0){
+        return node->finddir(node, name);
     } else {
         return NULL;
     }

@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <string.h>
+#include <kernel/paging.h>
 
 typedef void* type_t;
 
@@ -26,5 +27,9 @@ void insert_ordered_array(type_t item, ordered_array_t *array);
 type_t lookup_ordered_array(uint32_t i, ordered_array_t *array);
 
 void remove_ordered_array(uint32_t i, ordered_array_t *array);
+
+// we need to include this after we define ordered_array_t 
+// to resolve the concurrent dependency issue
+#include <kernel/kheap.h>
 
 #endif
