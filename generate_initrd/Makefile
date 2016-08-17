@@ -20,7 +20,7 @@ all: $(BINARIES)
 .PHONY: all clean install install-binaries install-headers
 
 generate_initrd: $(OBJS)
-	$(CC) -T $(ARCHDIR)/linker.ld -o $@ $(CFLAGS) $(CPPFLAGS) $(OBJS) $(LIBS)
+	$(CC) -o $@ $(CFLAGS) $(CPPFLAGS) $(OBJS) $(LIBS)
 
 %.o: %.c 
 	$(CC) -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)

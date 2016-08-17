@@ -1,3 +1,4 @@
 sysroot
-initrd
+initrd_contents
 initrd.txt
+initrd.img

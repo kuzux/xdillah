@@ -4,6 +4,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
+
+#define INITRD_MAGIC 0xDEAD4242
 
 typedef struct initrd_header{
     uint32_t magic;
