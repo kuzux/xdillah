@@ -30,6 +30,7 @@ typedef struct fs_node{
     uint32_t flags;  // see the #define s above
     uint32_t inode;  // provides a way for the fs to identify the file
     uint32_t length; // length of the file in bytes
+    uint32_t impl;   // An implementation defined number
 
     // various functions relating to the file 
     read_type_t read;
