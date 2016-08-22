@@ -4,16 +4,17 @@ PROJECTS="libc kernel generate_initrd"
 export MAKE=${MAKE:-make}
 export HOST=${HOST:-$(./default-host.sh)}
  
-export AR=${HOST}-ar
-export AS=${HOST}-as
-export CC=${HOST}-gcc
+export AR=~/opt/cross/bin/${HOST}-ar
+export AS=~/opt/cross/bin/${HOST}-as
+export CC=~/opt/cross/bin/${HOST}-gcc
  
 export PREFIX=/usr
 export EXEC_PREFIX=$PREFIX
 export BOOTDIR=/boot
 export LIBDIR=$EXEC_PREFIX/lib
 export INCLUDEDIR=$PREFIX/include
- 
+export BINDIR=$PREFIX/bin
+
 export CFLAGS='-O2 -g'
 export CPPFLAGS=''
  

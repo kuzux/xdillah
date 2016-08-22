@@ -1,9 +1,9 @@
 #include <kernel/kheap.h>
+#include <stdio.h>
 
 // end is defined in the linker script.
 extern uint32_t __end;
 uint32_t placement_address = (uint32_t)&__end;
-
 heap_t* kheap = NULL;
 
 static int32_t find_smallest_hole(uint32_t size, uint8_t page_align, 
@@ -18,7 +18,7 @@ static int32_t find_smallest_hole(uint32_t size, uint8_t page_align,
             uint32_t offset = 0;
 
             // page align the usable address, i.e. the part after the header
-            if(((location+sizeof(header_t)) & 0xFFFFF000) != 0){
+            if((location+sizeof(header_t) & 0xFFFFF000) != 0){
                 offset = 0x1000 - (location+sizeof(header_t))%0x1000;
             }
 
@@ -47,6 +47,8 @@ int header_less_than(void* a, void* b){
 
 heap_t* create_heap(uint32_t start, uint32_t end, uint32_t max, 
                     uint8_t supervisor, uint8_t readonly){
+
+
     heap_t* heap = (heap_t*)kmalloc(sizeof(heap_t));
 
     // assume start and end addresses are page aligned
@@ -192,7 +194,7 @@ void* alloc_heap(uint32_t size, uint8_t page_align, heap_t* heap){
     }
     // If we need to page-align the data, do it now and make a new hole in front of our block.
     if (page_align && orig_hole_pos&0xFFFFF000){
-        uint32_t new_location   = orig_hole_pos + 0x1000 /* page size */ - (orig_hole_pos&0xFFF) - sizeof(header_t);
+        uint32_t new_location = orig_hole_pos + 0x1000 /* page size */ - (orig_hole_pos&0xFFF) - sizeof(header_t);
         header_t *hole_header = (header_t *)orig_hole_pos;
         hole_header->size     = 0x1000 /* page size */ - (orig_hole_pos&0xFFF) - sizeof(header_t);
         hole_header->magic    = HEAP_MAGIC;
@@ -232,7 +234,6 @@ void* alloc_heap(uint32_t size, uint8_t page_align, heap_t* heap){
         // Put the new hole in the index;
         insert_ordered_array((void*)hole_header, &heap->index);
    }
-
 
     // ...And we're done!
     return (void *)((uint32_t)block_header+sizeof(header_t));
@@ -349,8 +350,11 @@ uint32_t kmalloc_ap(uint32_t sz, uint32_t *phys) {
 
 void* kmalloc(size_t sz) {
     if(kheap!=NULL){
+        // printf("asd\n");
+        // return (void*)(kmalloc_bootstrap(sz, 0, 0));
         return alloc_heap(sz, 0, kheap);
     } else {
+        // printf("qwe\n");
         return (void*)(kmalloc_bootstrap(sz, 0, 0));
     }
 }

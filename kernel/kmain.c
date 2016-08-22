@@ -35,14 +35,22 @@ void kmain(multiboot_info_t *mbd){
     uint32_t initrd_end = *(uint32_t*)(mbd->mods_addr+4);
     placement_address = initrd_end;
 
-    paging_init(mbd->mem_upper*1024);
-
     fs_root = initrd_parse(initrd_start);
     asm volatile("sti");
 
     timer_init(50);
     kb_init();
- 
+
+    paging_init(mbd->mem_upper*1024);
+
+    // some testing for initrd
+    int i;
+    for(i=0;;i++){
+        struct dirent* dir = fs_root->readdir(fs_root, i);
+        if(dir == NULL) break;
+        printf("%s\n", dir->name);
+    }
+
     for(;;);
     
     return;

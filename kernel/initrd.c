@@ -1,4 +1,5 @@
 #include <kernel/initrd.h>
+#include <stdio.h>
 
 initrd_header_t* header;
 initrd_file_header_t* file_headers;
@@ -53,7 +54,7 @@ static fs_node_t* initrd_finddir(fs_node_t* node, char* name){
     uint32_t i;
     for(i=0;i<nroot_nodes;i++){
         if(!strcmp(name, root_nodes[i].name)){
-            return &root_nodes[i];
+            return &(root_nodes[i]);
         }
     }
 }
@@ -81,7 +82,7 @@ fs_node_t* initrd_parse(uint32_t initrd_start){
 
     // initialize /dev
     initrd_dev = (fs_node_t*)kmalloc(sizeof(fs_node_t));
-    strcpy(initrd_root->name, "initrd");
+    strcpy(initrd_dev->name, "dev");
     initrd_dev->mask = initrd_dev->uid = initrd_dev->gid = 0;
     initrd_dev->inode = initrd_dev->length = 0;
     initrd_dev->flags = FS_DIRECTORY;
@@ -119,5 +120,5 @@ fs_node_t* initrd_parse(uint32_t initrd_start){
         root_nodes[i].ptr = root_nodes[i].impl = 0;
     }
 
-    return NULL;
+    return initrd_root;
 }

@@ -10,10 +10,6 @@
 uint32_t *frames;
 uint32_t nframes;
 
-// defined in kheap.c
-extern uint32_t placement_address;
-extern heap_t* kheap; 
-
 uint32_t next_page(){
     int i, n, lim;
     n = nframes/32;
@@ -78,18 +74,23 @@ void paging_init(uint32_t memsize){
      page_t* page;
 
 
-    while(acc < placement_address){
+    // allocate frames for already alloc'd memory and 4K more for some extra
+    // we alloc memory between this and completely activating kheap
+    while(acc < placement_address+0x1000){
         page = get_page(acc, 1, kernel_dir);
         alloc_frame(page, 1, 1);
 
         acc += 0x1000;
     }
+
     for (i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000)
         alloc_frame(get_page(i, 1, kernel_dir), 0, 0);
 
     register_interrupt_handler(0xe, page_fault);
 
     switch_page_directory(kernel_dir);
+
+    kheap = create_heap(KHEAP_START, KHEAP_START+KHEAP_INITIAL_SIZE, 0xCFFFF000, 0, 0);
 }
 
 void switch_page_directory(page_directory_t* dir){

@@ -33,6 +33,9 @@ typedef struct {
     uint8_t readonly;       // Should extra pages requested by us be mapped as read-only?
 } heap_t;
 
+extern uint32_t placement_address;
+extern heap_t* kheap;
+
 heap_t* create_heap(uint32_t start, uint32_t end, uint32_t max, uint8_t supervisor, uint8_t readonly);
 void* alloc_heap(uint32_t size, uint8_t page_align, heap_t* heap);
 void free_heap(void* p, heap_t* heap);

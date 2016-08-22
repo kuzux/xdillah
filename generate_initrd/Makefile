@@ -35,5 +35,5 @@ install-headers:
 	cp -Rv include $(DESTDIR)$(INCLUDEDIR)
 
 install-binaries: $(BINARIES)
-	mkdir -p $(DESTDIR)$(LIBDIR)
+	mkdir -p $(DESTDIR)$(BINDIR)
 	cp $(BINARIES) $(DESTDIR)$(BINDIR)

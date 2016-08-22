@@ -31,7 +31,7 @@ void close_fs(fs_node_t* node){
 }
 
 struct dirent* readdir_fs(fs_node_t* node, uint32_t idx){
-    if(node->readdir&& (node->flags&FS_DIRECTORY) != 0){
+    if(node->readdir && (node->flags&FS_DIRECTORY) != 0){
         return node->readdir(node, idx);
     } else {
         return NULL;
