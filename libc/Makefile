@@ -29,6 +29,7 @@ LIBK_CPPFLAGS:=$(LIBK_CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 FREEOBJS:=\
 $(ARCH_FREEOBJS) \
 stdio.o \
+ctype.o \
 stdlib/ato.o \
 stdlib/strto.o \
 stdlib/rand.o \
@@ -86,7 +87,7 @@ install: install-headers install-libs
  
 install-headers:
 	mkdir -p $(DESTDIR)$(INCLUDEDIR)
-	cp -Rv include $(DESTDIR)$(INCLUDEDIR)
+	cp -Rv include/ $(DESTDIR)$(INCLUDEDIR)
  
 install-libs: $(BINARIES)
 	mkdir -p $(DESTDIR)$(LIBDIR)

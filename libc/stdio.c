@@ -103,6 +103,7 @@ int printf(const char* restrict fmt, ...){
     while (*fmt){
         if(*fmt != '%'){
             putchar(*fmt);
+
             res++;
             fmt++;
 

@@ -87,7 +87,7 @@ install: install-headers install-kernel
  
 install-headers:
 	mkdir -p $(DESTDIR)$(INCLUDEDIR)
-	cp -Rv include $(DESTDIR)$(INCLUDEDIR)
+	cp -Rv include/ $(DESTDIR)$(INCLUDEDIR)
  
 install-kernel: xdillah.kernel
 	mkdir -p $(DESTDIR)$(BOOTDIR)

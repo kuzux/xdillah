@@ -48,7 +48,7 @@ void kmain(multiboot_info_t *mbd){
     for(i=0;;i++){
         struct dirent* dir = fs_root->readdir(fs_root, i);
         if(dir == NULL) break;
-        printf("%s\n", dir->name);
+        printf("/%s \n", dir->name);
     }
 
     for(;;);
