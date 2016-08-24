@@ -32,7 +32,7 @@ install: install-headers install-binaries
 
 install-headers:
 	mkdir -p $(DESTDIR)$(INCLUDEDIR)
-	cp -Rv include $(DESTDIR)$(INCLUDEDIR)
+	cp -Rv include/ $(DESTDIR)$(INCLUDEDIR)
 
 install-binaries: $(BINARIES)
 	mkdir -p $(DESTDIR)$(BINDIR)

@@ -1,5 +1,5 @@
-SYSTEM_HEADER_PROJECTS="libc kernel generate_initrd"
-PROJECTS="libc kernel generate_initrd"
+SYSTEM_HEADER_PROJECTS="generate_initrd libc kernel"
+PROJECTS="generate_initrd libc kernel"
  
 export MAKE=${MAKE:-make}
 export HOST=${HOST:-$(./default-host.sh)}

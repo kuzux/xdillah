@@ -30,6 +30,7 @@ FREEOBJS:=\
 $(ARCH_FREEOBJS) \
 stdio.o \
 ctype.o \
+errno.o \
 stdlib/ato.o \
 stdlib/strto.o \
 stdlib/rand.o \
