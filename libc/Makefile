@@ -44,6 +44,15 @@ string/str.o \
 string/strn.o \
 string/strpbrk.o \
 string/strtok.o \
+math/trig.o \
+math/hyp.o \
+math/explog.o \
+math/pow.o \
+math/erf.o \
+math/round.o \
+math/fpmanip.o \
+math/minmax.o \
+math/other.o \
 
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \
