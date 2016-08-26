@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #ifndef NDEBUG
-#define assert(x) if(!(x)){ abort(); }
+#define assert(x) { if(!(x)){ abort(); } }
 #else
 #define assert(ignore)((void) 0)
 #endif

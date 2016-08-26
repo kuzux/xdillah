@@ -12,6 +12,7 @@
 #include <kernel/kheap.h>
 #include <kernel/fs.h>
 #include <kernel/initrd.h>
+#include <kernel/elf.h>
 #include <stdio.h>
 #include <assert.h>
 
@@ -50,6 +51,20 @@ void kmain(multiboot_info_t *mbd){
         if(dir == NULL) break;
         printf("/%s \n", dir->name);
     }
+/*
+    char test[11];
+    fs_node_t* test_txt = fs_root->finddir(fs_root, "initrd_contents/test.txt");
+    test_txt->read(test_txt, 0, 10, test);
+    test[10] = '\0';
+    printf("%s \n", test);
+*/
+
+    fs_node_t* elf_test = fs_root->finddir(fs_root, "initrd_contents/elf_test");
+
+    elf_header_t* header;
+    elf_ph_t** pht;
+    elf_sh_t** sht;
+    parse_elf(elf_test, header, pht, sht);
 
     for(;;);
     

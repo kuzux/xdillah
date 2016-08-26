@@ -13,7 +13,7 @@ http://wiki.osdev.org/ELF
 
 */
 
-#define ELF_MAGIC 0x7f454c46
+#define ELF_MAGIC 0x464c457f
 
 #define ELF_32BIT 1
 #define ELF_64BIT 2
@@ -97,6 +97,6 @@ struct elf_sh {
 
 typedef struct elf_sh elf_sh_t;
 
-int parse_elf(fs_node_t file, elf_header_t* header, elf_ph_t** pht, elf_sh_t** sht);
+int parse_elf(fs_node_t* file, elf_header_t* header, elf_ph_t** pht, elf_sh_t** sht);
 
 #endif

@@ -34,11 +34,12 @@ int main(int argc, char** argv){
     for(i=0; i<n; i++){
         FILE* stream = fopen(argv[i+1], "r");
         unsigned char* buf = malloc(file_headers[i].size);
+
+        int off = ftell(out);
         
         fread(buf, 1, file_headers[i].size, stream);
         fwrite(buf, 1, file_headers[i].size, out);
 
-        int off = ftell(out);
         printf("writing file %s at offset %d\n", argv[i+1], off);
 
         fclose(stream);
