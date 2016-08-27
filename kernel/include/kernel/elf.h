@@ -93,6 +93,7 @@ struct elf_sh {
     uint32_t address; // Virtual address of the section in memory, for sections that are loaded
     uint32_t offset; // Offset of the section in the file image
     uint32_t size; // Size in bytes of the section in the file image
+    uint8_t stuff[16];
 } __attribute__((packed));
 
 typedef struct elf_sh elf_sh_t;
