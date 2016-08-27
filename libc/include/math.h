@@ -36,8 +36,8 @@ double asinh(double x);
 double atanh(double x);
 
 double exp(double x);
-double frexp(double x);
-double ldexp(double x);
+double frexp(double x, int* exp);
+double ldexp(double x, int exp);
 double log(double x);
 double log10(double x);
 double modf(double x, double* intpart);

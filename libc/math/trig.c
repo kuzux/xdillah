@@ -17,8 +17,7 @@ double tan(double x){
 }
 
 double acos(double x){
-    atan2(sqrt((1.0 + x) * (1.0 - x)), x);
-
+    return atan2(sqrt((1.0 + x) * (1.0 - x)), x);
 }
 
 double asin(double x){
