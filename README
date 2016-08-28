@@ -2,4 +2,10 @@ Xdillah is a kernel written just for fun, at this point, it does pretty much not
 
 INSTALLATION
 
-Compile cross gcc and binutils for i686-elf (or i386-elf) and have them on the path. Also requires nasm and make(obviously), make the sh scripts on the main folder executable if they aren't already. qemu is optional, if you have any other ways to run it(create an iso with grub command line tools and whatever), you're free to try.
+First of all, you need a unix-like environment(Tested on OSX, might require some makefile work on linux). Compile cross gcc and binutils for i686-elf (or i386-elf, you need to modify default-host.sh and the names of the arch directories to get it to work for i386, I don't think i use anything that's available on i686 but not on i386) and have them on the path (and gcc has to be on the path as well). Also requires nasm and make(obviously), make the sh scripts on the main folder executable if they aren't already. qemu is optional, if you have any other ways to run it(create an iso with grub command line tools and try to run on other VM software, or even try it on some physical hardware), you're free to try (And also, notify me if you get it to work. You also need either an x86 VM or an x86 machine to run it, doesn't support other architectures(ARM, MIPS, SPARC etc) yet.
+
+LICENSE
+WTFPL generally, see LICENSE for additional details.
+
+CONTRIBUTING
+Just fork it on GitHub, I'll probably get notified. Also, my email might be available on my GitHub profile (there's a very high probability of that, I can't be that sure of me responding if you choose to contact me via email).And one more thing, if you somehow stumble across my phone number and don't personally know me, don't call me, creep.

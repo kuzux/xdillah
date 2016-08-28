@@ -16,6 +16,13 @@
 #include <stdio.h>
 #include <assert.h>
 
+void header(){
+    printf("Booting xdillah version %s \n", XDILLAH_VERSION);
+    printf("Compiled at %s on %s \n", XDILLAH_COMPILE_DATE, XDILLAH_COMPILE_ENV);
+    printf("Written by %s \n", XDILLAH_AUTHOR);
+    printf("################################################ \n");
+}
+
 void kearly(){
     gdt_init();
     idt_init();
@@ -43,6 +50,8 @@ void kmain(multiboot_info_t *mbd){
     kb_init();
 
     paging_init(mbd->mem_upper*1024);
+
+    // header();
 
     // some testing for initrd
     int i;

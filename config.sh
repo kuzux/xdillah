@@ -16,6 +16,11 @@ export LIBDIR=$EXEC_PREFIX/lib
 export INCLUDEDIR=$PREFIX/include
 export BINDIR=$PREFIX/bin
 
+export XDILLAH_VERSION="0.1-DEV"
+export XDILLAH_COMPILE_DATE=`date +%Y-%m-%d:%H:%M:%S`
+export XDILLAH_COMPILE_ENV=`uname -a`
+export XDILLAH_AUTHOR="kuzux"
+
 export CFLAGS='-O2 -g'
 export CPPFLAGS=''
  

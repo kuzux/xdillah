@@ -4,11 +4,11 @@ double exp(double x){
 
 }
 
-double frexp(double x, int* x){
+double frexp(double x, int* y){
 
 }
 
-double ldexp(double x, int x){
+double ldexp(double x, int y){
 
 }
 

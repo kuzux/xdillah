@@ -11,12 +11,19 @@ PREFIX?=/usr/local
 EXEC_PREFIX?=$(PREFIX)
 BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
+
+XDILLAH_VERSION?=
+XDILLAH_COMPILE_DATE?=
+XDILLAH_COMPILE_ENV?=
+XDILLAH_AUTHOR?=
  
 CFLAGS:=$(CFLAGS) -ffreestanding -fbuiltin -Wall -Wextra
-CPPFLAGS:=$(CPPFLAGS) -D__is_xdillah_kernel -Iinclude -I../libc/include
+CPPFLAGS:=$(CPPFLAGS) -D__is_xdillah_kernel -DXDILLAH_VERSION=\""$(XDILLAH_VERSION)"\" \
+	-DXDILLAH_COMPILE_DATE=\"$(XDILLAH_COMPILE_DATE)\" -DXDILLAH_COMPILE_ENV=\""$(XDILLAH_COMPILE_ENV)"\" \
+	-DXDILLAH_AUTHOR=\"$(XDILLAH_AUTHOR)\" -Iinclude -I../libc/include
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lgcc
- 
+
 ARCHDIR:=arch/$(HOSTARCH)
  
 include $(ARCHDIR)/make.config
