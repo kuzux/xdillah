@@ -53,6 +53,7 @@ math/round.o \
 math/fpmanip.o \
 math/minmax.o \
 math/other.o \
+setjmp.o
 
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \
@@ -82,13 +83,13 @@ libk.a: $(LIBK_OBJS)
 	$(CC) -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
  
 %.o: %.s
-	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+	nasm -f elf $< -o $@
  
 %.libk.o: %.c
 	$(CC) -c $< -o $@ -std=gnu11 $(LIBK_CFLAGS) $(LIBK_CPPFLAGS)
  
-%.libk.o: %.S
-	$(CC) -c $< -o $@ $(LIBK_CFLAGS) $(LIBK_CPPFLAGS)
+%.libk.o: %.s
+	nasm -f elf $< -o $@
  
 clean:
 	rm -f $(BINARIES) $(OBJS) $(LIBK_OBJS) *.o */*.o */*/*.o

@@ -1,15 +1,16 @@
 #include <math.h>
 
+extern double _sin(double);
+extern double _cos(double);
+
 double cos(double x){
-    double sinx, cosx;
-    asm("fsincos" : "=t" (cosx), "=u" (sinx) : "0" (x));
-    return cosx;
+    return _cos(x);
 }
 
 double sin(double x){
     double sinx, cosx;
     asm("fsincos" : "=t" (cosx), "=u" (sinx) : "0" (x));
-    return sinx;
+    return _sin(x);
 }
 
 double tan(double x){
@@ -29,7 +30,7 @@ typedef uint64_t __attribute__((__may_alias__)) uint64_a;
 double atan(double x){
     // mostly copied from 
     // http://stackoverflow.com/questions/7378187/approximating-inverse-trigonometric-funcions
-    static const uint64_t sign_mask = 0x8000000000000000;
+    static const uint64_t sign_mask = 0x8000000000000000LL;
     static const double b = 0.596227f;
 
     uint64_a ux_s = sign_mask & (uint64_a)x;
@@ -45,7 +46,7 @@ double atan(double x){
 double atan2(double y, double x){
     // mostly copied from 
     // http://stackoverflow.com/questions/7378187/approximating-inverse-trigonometric-funcions
-    static const uint64_t sign_mask = 0x8000000000000000;
+    static const uint64_t sign_mask = 0x8000000000000000LL;
     static const double b = 0.596227f;
 
     // Extract the sign bits
