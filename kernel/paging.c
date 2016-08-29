@@ -76,7 +76,7 @@ void paging_init(uint32_t memsize){
 
     // allocate frames for already alloc'd memory and 4K more for some extra
     // we alloc memory between this and completely activating kheap
-    while(acc < placement_address+0x1000){
+    while(acc < placement_address+0x10000){
         page = get_page(acc, 1, kernel_dir);
         alloc_frame(page, 1, 1);
 

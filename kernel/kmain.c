@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-void header(){
+void print_header(){
     printf("Booting xdillah version %s \n", XDILLAH_VERSION);
     printf("Compiled at %s on %s \n", XDILLAH_COMPILE_DATE, XDILLAH_COMPILE_ENV);
     printf("Written by %s \n", XDILLAH_AUTHOR);
@@ -43,15 +43,13 @@ void kmain(multiboot_info_t *mbd){
     uint32_t initrd_end = *(uint32_t*)(mbd->mods_addr+4);
     placement_address = initrd_end;
 
-    fs_root = initrd_parse(initrd_start);
     asm volatile("sti");
 
     timer_init(50);
     kb_init();
 
     paging_init(mbd->mem_upper*1024);
-
-    // header();
+    fs_root = initrd_parse(initrd_start);
 
     // some testing for initrd
     int i;
@@ -60,8 +58,8 @@ void kmain(multiboot_info_t *mbd){
         if(dir == NULL) break;
         printf("/%s \n", dir->name);
     }
-/*
-    char test[11];
+
+/*  char test[11];
     fs_node_t* test_txt = fs_root->finddir(fs_root, "initrd_contents/test.txt");
     test_txt->read(test_txt, 0, 10, test);
     test[10] = '\0';
@@ -74,6 +72,8 @@ void kmain(multiboot_info_t *mbd){
     elf_ph_t** pht;
     elf_sh_t** sht;
     parse_elf(elf_test, header, pht, sht);
+
+    print_header();
 
     for(;;);
     

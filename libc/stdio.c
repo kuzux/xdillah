@@ -2,7 +2,14 @@
 
 #if defined(__is_xdillah_kernel)
 #include <kernel/tty.h>
+#include <kernel/serial.h>
 #endif
+
+void sp(const char* restrict s){
+    #if defined(__is_xdillah_kernel)
+        puts_serial(s, COM1);
+    #endif
+}
 
 int putchar(int ic){
     #if defined(__is_xdillah_kernel)
@@ -33,6 +40,10 @@ size_t putdec(uint32_t n){
         return 1;
     }
 
+    if(n<0){
+        putchar('-');
+    }
+
     int32_t acc = n;
     char c[32];
     int i = 0;
@@ -54,6 +65,10 @@ size_t putdec(uint32_t n){
 
 size_t puthex(uint32_t n){
     int32_t tmp;
+
+    if(n<0){
+        putchar('-');
+    }
 
     puts("0x");
     size_t res = 0;
@@ -100,18 +115,25 @@ int printf(const char* restrict fmt, ...){
     char c;
     const char* s;
 
-    while (*fmt){
-        if(*fmt != '%'){
+    char* p;
+
+    while(*fmt){
+        while(*fmt!='%'&&*fmt!='\0'){
             putchar(*fmt);
-
-            res++;
             fmt++;
-
-            continue;
+            res++;
         }
 
+        if(*fmt=='\0') break;
+
         fmt++;
+
         switch(*fmt){
+            case 'c':
+                c = (char)va_arg(params, int);
+                putchar(c);
+                res++;
+                break;
             case 'd':
                 n = (int)va_arg(params, int);
                 res += putdec(n);
@@ -120,25 +142,20 @@ int printf(const char* restrict fmt, ...){
                 n = (int)va_arg(params, int);
                 res += puthex(n);
                 break;
-            case 'c':
-                c = (char)va_arg(params, int);
-                putchar(c);
-                res++;
-                break;
             case 's':
                 s = (const char*)va_arg(params, const char*);
                 res += puts(s);
                 break;
-            case '%':
-                putchar('%');
-                res++;
-                break;
             default:
+                putchar(*fmt);
+                res++;
                 break;
         }
 
         fmt++;
     }
+
+    va_end(params);
 
     return res;
 }
