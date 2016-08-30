@@ -53,7 +53,8 @@ math/round.o \
 math/fpmanip.o \
 math/minmax.o \
 math/other.o \
-setjmp.o
+setjmp.o \
+unistd/alloc.o \
 
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \

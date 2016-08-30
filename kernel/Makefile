@@ -51,6 +51,7 @@ ordered_array.o \
 fs.o \
 initrd.o \
 elf.o \
+brk.o \
 
 CRTI_OBJ:=$(ARCHDIR)/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)
