@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <internal/malloc.h>
 #include <unistd.h>
+#include <assert.h>
 
 // Mostly copied & pasted from https://danluu.com/malloc-tutorial/
+// http://www.inf.udec.cl/~leo/Malloc_tutorial.pdf is another good resource
 
 void* calloc(size_t num, size_t size){
     void* m = malloc(num*size);
@@ -28,6 +30,7 @@ block_t* request_space(block_t* last, size_t size){
 
     block->size = size;
     block->next = NULL;
+    block->prev = last;
     block->free=0;
     block->magic = BLOCK_MAGIC;
 
@@ -44,6 +47,31 @@ block_t* find_block(block_t** last, size_t size){
 
 block_t* get_block(void* ptr){
     return (block_t*)(ptr-1);
+}
+
+void split_block(block_t* blk, size_t sz){
+    if(sz + BLOCK_SIZE >= blk) return;
+
+    block_t* newblk = (block_t*)(blk+BLOCK_SIZE+sz);
+    newblk->size = blk->size - BLOCK_SIZE - sz;
+    newblk->next = blk->next;
+    blk->next = newblk;
+    newblk->prev = blk;
+    newblk->free = 1;
+    newblk->magic = BLOCK_MAGIC;
+}
+
+void merge_blocks(block_t* blk){
+    while(blk->free == 0 && blk->next && blk->next->free == 0){
+        blk->next = blk->next->next;
+        blk->size += blk->next->size + BLOCK_SIZE;
+    }
+
+    while(blk->free == 0 && blk->prev && blk->prev->free == 0){
+        blk->prev->next = blk->next;
+        blk->prev->size += blk->size + BLOCK_SIZE;
+        blk = blk->prev;
+    }
 }
 
 void* malloc(size_t size){
@@ -71,9 +99,9 @@ void* malloc(size_t size){
                 return malloc(size);
             }
         } else {
-            // todo: split blocks
             block->free = 0;
             block->magic = BLOCK_MAGIC;
+            split_block(block, size);
         }
     }
 
@@ -81,7 +109,18 @@ void* malloc(size_t size){
 }
 
 void* realloc(void* ptr, size_t size){
+    if(!ptr) return malloc(size);
+    block_t* block = get_block(ptr);
 
+    if(block->size>=size) return ptr;
+
+    void* new_ptr = malloc(size);
+
+    if(!new_ptr) return NULL;
+
+    memcpy(new_ptr, ptr, block->size);
+    free(ptr);
+    return new_ptr;
 }
 
 void free(void* ptr){
@@ -95,4 +134,5 @@ void free(void* ptr){
     assert(block->magic==BLOCK_MAGIC);
     block->free=1;
     block->magic=BLOCK_MAGIC;
+    merge_blocks(block);
 }

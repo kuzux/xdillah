@@ -8,6 +8,7 @@
 typedef struct block {
     size_t size;
     struct block* next;
+    struct block* prev;
     int free;
     int magic;
 } block_t;

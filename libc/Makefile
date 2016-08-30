@@ -65,7 +65,7 @@ $(HOSTEDOBJS) \
  
 LIBK_OBJS:=$(FREEOBJS:.o=.libk.o)
  
-BINARIES=libc.a libg.a libk.a
+BINARIES=libc.a libg.a libk.a crt0.o
  
 all: $(BINARIES)
  
@@ -79,7 +79,10 @@ libg.a:
  
 libk.a: $(LIBK_OBJS)
 	$(AR) rcs $@ $(LIBK_OBJS)
- 
+
+crt0.o: arch/i386/crt0.o
+	cp $< $@
+
 %.o: %.c
 	$(CC) -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
  
