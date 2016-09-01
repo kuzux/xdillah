@@ -10,10 +10,10 @@ uint32_t exit_funcs_id = 0;
 uint32_t quickexit_funcs_id = 0;
 
 __attribute__((__noreturn__))
-void abort(void)
+void abort(char* file, int line)
 {
     // TODO: Add proper kernel panic.
-    printf("Kernel Panic: abort()\n");
+    printf("Kernel Panic: abort() at %d@%s\n", line, file);
     while ( 1 ) { }
     __builtin_unreachable();
 }

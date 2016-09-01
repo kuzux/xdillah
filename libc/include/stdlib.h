@@ -52,7 +52,7 @@ void* realloc(void* ptr, size_t size);
 void free(void* ptr);
 
 __attribute__((__noreturn__))
-void abort(void);
+void abort(char*, int);
 int atexit(void (*func)(void));
 int at_quick_exit(void (*func)(void));
 void exit(int status);

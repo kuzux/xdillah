@@ -2,6 +2,7 @@
 #include <internal/malloc.h>
 #include <unistd.h>
 #include <assert.h>
+#include <stdio.h>
 
 // Mostly copied & pasted from https://danluu.com/malloc-tutorial/
 // http://www.inf.udec.cl/~leo/Malloc_tutorial.pdf is another good resource
@@ -17,9 +18,11 @@ void* global_base = NULL;
 block_t* request_space(block_t* last, size_t size){
     block_t* block;
     block = sbrk(0);
+
     void* request = sbrk(size+BLOCK_SIZE);
 
     assert(((void*)block)==request);
+
     if(request < 0){
         return NULL; // sbrk failed
     }
@@ -84,10 +87,12 @@ void* malloc(size_t size){
 
     if(!global_base){
         block = request_space(NULL, size);
+
         if(!block){
             return NULL;
         }
         global_base = block;
+
     } else {
         block_t* last = global_base;
         block = find_block(&last, size);

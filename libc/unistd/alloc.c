@@ -1,7 +1,7 @@
 #include <unistd.h>
 
 #if defined(__is_xdillah_kernel)
-#include <kernel/brk.h>
+#include <kernel/kheap.h>
 #endif
 
 int brk(void* addr){

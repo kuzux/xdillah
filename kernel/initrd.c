@@ -70,6 +70,7 @@ fs_node_t* initrd_parse(uint32_t initrd_start){
 
     // initialize root
     initrd_root = (fs_node_t*)kmalloc(sizeof(fs_node_t));
+
     strcpy(initrd_root->name, "initrd");
     initrd_root->mask = initrd_root->uid = initrd_root->gid = 0;
     initrd_root->inode = initrd_root->length = 0;

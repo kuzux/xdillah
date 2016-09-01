@@ -32,8 +32,9 @@ void alloc_frame(page_t* page, int kernel, int write){
     uint32_t alloc = next_page();
 
     if(alloc == (uint32_t)-1){
+        //todo: hdd swaping?
         printf("%s\n", "No more frames!");
-        abort();
+        abort(__FILE__,__LINE__);
     }
     
     bitmap_set(frames, alloc);
@@ -67,12 +68,11 @@ void paging_init(uint32_t memsize){
     // they need to be identity mapped first below, and yet we can't increase
     // placement_address between identity mapping and enabling the heap!
     int i = 0;
-    for (i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000)
+    for (i = KHEAP_START; i < KHEAP_START+HEAP_INITIAL_SIZE; i += 0x1000)
         get_page(i, 1, kernel_dir);
 
      uint32_t acc = 0;
      page_t* page;
-
 
     // allocate frames for already alloc'd memory and 4K more for some extra
     // we alloc memory between this and completely activating kheap
@@ -83,14 +83,14 @@ void paging_init(uint32_t memsize){
         acc += 0x1000;
     }
 
-    for (i = KHEAP_START; i < KHEAP_START+KHEAP_INITIAL_SIZE; i += 0x1000)
+    for (i = KHEAP_START; i < KHEAP_START+HEAP_INITIAL_SIZE; i += 0x1000)
         alloc_frame(get_page(i, 1, kernel_dir), 0, 0);
 
     register_interrupt_handler(0xe, page_fault);
 
     switch_page_directory(kernel_dir);
 
-    kheap = create_heap(KHEAP_START, KHEAP_START+KHEAP_INITIAL_SIZE, 0xCFFFF000, 0, 0);
+    kheap = make_heap(KHEAP_START, KHEAP_START+HEAP_INITIAL_SIZE, 0xCFFFF000, 0, 0);
 }
 
 void switch_page_directory(page_directory_t* dir){
@@ -142,6 +142,6 @@ void page_fault(registers_t regs){
     if (reserved){ printf("reserved "); }
     printf(") at %x\n", faulting_address);
 
-    abort();
+    abort(__FILE__, __LINE__);
 
 }

@@ -46,10 +46,20 @@ void kmain(multiboot_info_t *mbd){
     asm volatile("sti");
 
     timer_init(50);
+
+    printf("timer done \n");
+
     kb_init();
 
+    printf("initializing paging \n");
+
     paging_init(mbd->mem_upper*1024);
+
+    printf("paging done \n");
+
     fs_root = initrd_parse(initrd_start);
+
+    printf("initrd done \n");
 
     // some testing for initrd
     int i;
