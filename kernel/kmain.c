@@ -20,7 +20,7 @@ void print_header(){
     printf("Booting xdillah version %s \n", XDILLAH_VERSION);
     printf("Compiled at %s on %s \n", XDILLAH_COMPILE_DATE, XDILLAH_COMPILE_ENV);
     printf("Written by %s \n", XDILLAH_AUTHOR);
-    printf("################################################ \n");
+    printf("%s \n", "################################################");
 }
 
 void kearly(){
@@ -45,21 +45,23 @@ void kmain(multiboot_info_t *mbd){
 
     asm volatile("sti");
 
+    print_header();
+
     timer_init(50);
 
-    printf("timer done \n");
+    printf("%s \n", "timer done");
 
     kb_init();
 
-    printf("initializing paging \n");
+    printf("%s \n", "initializing paging");
 
     paging_init(mbd->mem_upper*1024);
 
-    printf("paging done \n");
+    printf("%s \n", "paging done");
 
     fs_root = initrd_parse(initrd_start);
 
-    printf("initrd done \n");
+    printf("%s \n", "initrd done");
 
     // some testing for initrd
     int i;
@@ -83,7 +85,6 @@ void kmain(multiboot_info_t *mbd){
     elf_sh_t** sht;
     parse_elf(elf_test, header, pht, sht);
 
-    print_header();
 
     for(;;);
     

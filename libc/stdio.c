@@ -128,6 +128,8 @@ int printf(const char* restrict fmt, ...){
 
         fmt++;
 
+        if(*fmt=='\0') break;
+
         switch(*fmt){
             case 'c':
                 c = (char)va_arg(params, int);
