@@ -1,5 +1,13 @@
 #include <kernel/gdt.h>
 
+/** 
+ * Functions related to accessing/modifying the global descriptor table
+ * entries. These functions are very architecture-dependent and are mostly 
+ * defined in assembly files in arch/ directory
+ * For more detailed info regarding the GDT, see the GDT section on 
+ * JamesM's kernel development tutorial
+**/
+
 extern void gdt_flush(uint32_t);
 
 gdt_entry_t gdt_entries[5];

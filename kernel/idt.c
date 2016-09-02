@@ -2,6 +2,16 @@
 #include <string.h>
 #include <kernel/ioprim.h>
 
+/**
+ * Similar to gdt.c, the functions that are in this file deal with Interrupt
+ * descriptor table entries, the init function populates the table with stub 
+ * Interrupt service routine entries, many funvtions and the ISRs themselves 
+ * are very platform-specific and defined in the assembly files in the arch/
+ * directory.
+ * Similarly, for more information in this topic, see the IDT section in
+ * JamesM's kernel development tutorial series
+**/
+
 idt_entry_t idt_entries[256];
 idt_ptr_t idt_ptr;
 

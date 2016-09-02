@@ -1,5 +1,21 @@
 #include <kernel/initrd.h>
 #include <stdio.h>
+/**
+ * Functions that deal with initializing and reading from the initial ramdisk
+ * The initrd is generated with the generate_initrd executable separate 
+ * from the kernel. The initrd is a read-only filesystem for storing various 
+ * kernel modules, executables separate from the kernel itself, as well as
+ * configuration files that will be read by the kernel. It is separate from the 
+ * main hdd reader, it is loaded in the main executable of the kernel, because
+ * the functions responsible for loading the hard disk will be located in a 
+ * separate executable file still working in supervisor mode, but in a separate 
+ * executable. Initrd is a flat, non-hierarchical filesystem, it is loaded as a 
+ * multiboot module, its location is read from the multiboot header that the 
+ * bootloader provides, its header contains a magic number, the number, names 
+ * and lengths of the files. Then the file contents themselves are stored. In the 
+ * in the initrd filesystem, /dev is a subdirectory, but it just redirects 
+ * everything to the main (and only) directory
+**/
 
 initrd_header_t* header;
 initrd_file_header_t* file_headers;

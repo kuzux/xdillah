@@ -1,5 +1,14 @@
 #include <kernel/fs.h>
 
+/** 
+ * Simply defines some utility functions to work with fs nodes. VFS nodes
+ * abstract the concept of a file/directory and can be used for initramfs,
+ * an actual filesystem as well as /dev and /proc nodes. These implementations
+ * will need to define their own read/write implementations to work. The FS 
+ * nodes can just stub out the functions with a NULL value. These functions 
+ * check for NULL values and fail gracefully for stub implementations.
+**/
+
 fs_node_t* fs_root = NULL;
 
 uint32_t read_fs(fs_node_t* node, uint32_t offset, uint32_t size, uint8_t* buf){
