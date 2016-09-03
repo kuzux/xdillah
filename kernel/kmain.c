@@ -14,6 +14,7 @@
 #include <kernel/initrd.h>
 #include <kernel/elf.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 
 void print_header(){
@@ -33,15 +34,19 @@ void kearly(){
 extern uint32_t placement_address;
 
 void kmain(multiboot_info_t *mbd){
-    // assume we have an initrd
-    ASSERT(mbd->mods_count > 0);
-
     //don't use that after we init paging
-    mb_module_t* mod = (mb_module_t*)(mbd->mods_addr);
 
-    uint32_t initrd_start = *(uint32_t*)(mbd->mods_addr);
-    uint32_t initrd_end = *(uint32_t*)(mbd->mods_addr+4);
-    placement_address = initrd_end;
+    int modcount = mbd->mods_count;
+
+    uint32_t initrd_start, initrd_end;
+
+    if(modcount > 0){
+        mb_module_t* mod = (mb_module_t*)(mbd->mods_addr);
+
+        initrd_start = *(uint32_t*)(mbd->mods_addr);
+        initrd_end = *(uint32_t*)(mbd->mods_addr+4);
+        placement_address = initrd_end;
+    }
 
     asm volatile("sti");
 
@@ -58,10 +63,14 @@ void kmain(multiboot_info_t *mbd){
     paging_init(mbd->mem_upper*1024);
 
     printf("%s \n", "paging done");
-
-    fs_root = initrd_parse(initrd_start);
-
-    printf("%s \n", "initrd done");
+    
+    if(modcount > 0){
+        fs_root = initrd_parse(initrd_start);
+        printf("%s \n", "initrd done");
+    } else {
+        printf("%s \n", "fatal error: no initrd");
+        abort(__FILE__, __LINE__);
+    }
 
     // some testing for initrd
     int i;
@@ -81,10 +90,10 @@ void kmain(multiboot_info_t *mbd){
     fs_node_t* elf_test = fs_root->finddir(fs_root, "initrd_contents/elf_test");
 
     elf_header_t* header;
-    elf_ph_t** pht;
-    elf_sh_t** sht;
+    elf_ph_t* pht;
+    elf_sh_t* sht;
+    printf("%s \n","elf");
     parse_elf(elf_test, header, pht, sht);
-
 
     for(;;);
     

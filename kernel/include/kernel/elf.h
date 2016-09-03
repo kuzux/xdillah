@@ -98,6 +98,6 @@ struct elf_sh {
 
 typedef struct elf_sh elf_sh_t;
 
-int parse_elf(fs_node_t* file, elf_header_t* header, elf_ph_t** pht, elf_sh_t** sht);
+int parse_elf(fs_node_t* file, elf_header_t* header, elf_ph_t* pht, elf_sh_t* sht);
 
 #endif
