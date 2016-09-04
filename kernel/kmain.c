@@ -72,14 +72,6 @@ void kmain(multiboot_info_t *mbd){
         abort(__FILE__, __LINE__);
     }
 
-    // some testing for initrd
-    int i;
-    for(i=0;;i++){
-        struct dirent* dir = fs_root->readdir(fs_root, i);
-        if(dir == NULL) break;
-        printf("/%s \n", dir->name);
-    }
-
 /*  char test[11];
     fs_node_t* test_txt = fs_root->finddir(fs_root, "initrd_contents/test.txt");
     test_txt->read(test_txt, 0, 10, test);
@@ -92,7 +84,6 @@ void kmain(multiboot_info_t *mbd){
     elf_header_t* header;
     elf_ph_t* pht;
     elf_sh_t* sht;
-    printf("%s \n","elf");
     parse_elf(elf_test, header, pht, sht);
 
     for(;;);

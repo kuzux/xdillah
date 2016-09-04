@@ -16,8 +16,6 @@ void expand(heap_t* h, void* newaddr){
     ASSERT(h != NULL);
     ASSERT(iaddr > h->end);
 
-    printf("%x \n", iaddr);
-
     // page align the new break
     if((iaddr & 0xFFFFF000) != 0){
         iaddr &= 0xFFFFF000;
@@ -28,6 +26,7 @@ void expand(heap_t* h, void* newaddr){
 
     // assume our previous end address is page aligned
     ASSERT(h->end % 0x1000 == 0);
+    ASSERT(iaddr % 0x1000 == 0);
 
     uint32_t i = 0;
     for(i=h->end;i<iaddr;i+=0x1000){
@@ -56,11 +55,12 @@ void contract(heap_t* h, void* newaddr){
     ASSERT(iaddr <= h->max);
 
     // assume our previous end address is page aligned
+    ASSERT(iaddr % 0x1000 == 0);
     ASSERT(h->end % 0x1000 == 0);
-    uint32_t i = 0;
 
+    uint32_t i = 0;
+    printf("%x %x \n", iaddr, h->end);
     for(i=iaddr;i<h->end;i+=0x1000){
- 
         free_frame(get_page(i, 1, curr_dir));
     }
 
@@ -87,10 +87,11 @@ heap_t* make_heap(uint32_t start, uint32_t end, uint32_t max,
 }
 
 int do_brk(void* addr){
+    // this function currently gets called infinitely for some reason
     //todo: actually request the pid
     uint32_t pid = 0;
     heap_t* curr;
-    
+
     if(pid == 0){
         if(kheap!=NULL) curr = kheap;
     }
@@ -102,7 +103,6 @@ int do_brk(void* addr){
     if(curr->brk>curr->end){
         expand(curr, addr); 
     } else if(curr->brk<curr->end && curr->end-curr->brk < HEAP_MIN_SIZE){
-        // todo: this function panics due to a failed assert or something
         contract(curr, addr);
     }
 
@@ -147,14 +147,13 @@ uint32_t kmalloc_ap(uint32_t sz, uint32_t *phys) {
 }
 
 void* kmalloc(size_t sz) {
-    //if(kheap!=NULL){
-        // printf("asd\n");
-        // return (void*)(kmalloc_bootstrap(sz, 0, 0));        
-        //return malloc(sz);
-    //} else {
-        // printf("qwe\n");
+    // use the bootstrap malloc until we allocate the necessary data structures
+    // needed to initialize a kernel heap
+    if(kheap!=NULL){
+        return malloc(sz);
+    } else {
         return (void*)(kmalloc_bootstrap(sz, 0, 0));
-    //}
+    }
 }
 
 void kfree(void* ptr) {

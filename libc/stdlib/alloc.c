@@ -77,7 +77,9 @@ void merge_blocks(block_t* blk){
     }
 }
 
-void* malloc(size_t size){
+// align should be the alignment for the address
+// for example 0x1000 for 4k
+void* malloc_internal(size_t size, uint32_t align){
     block_t* block;
     // todo: align size to 8 bytes (or 4K)
 
@@ -94,14 +96,13 @@ void* malloc(size_t size){
         global_base = block;
 
     } else {
+        // something goes terribly wrong here
         block_t* last = global_base;
         block = find_block(&last, size);
         if(!block){
             block = request_space(last, size);
             if(!block){
                 return NULL;
-            } else {
-                return malloc(size);
             }
         } else {
             block->free = 0;
@@ -111,6 +112,11 @@ void* malloc(size_t size){
     }
 
     return (block+1);
+}
+
+void* malloc(size_t size){
+    // align to 8 bytes by default
+    return malloc_internal(size, 0x8);
 }
 
 void* realloc(void* ptr, size_t size){

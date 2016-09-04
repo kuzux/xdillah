@@ -36,9 +36,7 @@ static uint32_t initrd_read(fs_node_t* node, uint32_t offset, uint32_t size, uin
     if(offset+size>header.size){
         size = header.size - offset;
     }
-
-    printf("%d %d %d \n", header.offset, header.offset+offset, size);
-
+    
     memcpy(buf, (uint8_t*)(header.offset+offset), size);
 
     return size;
