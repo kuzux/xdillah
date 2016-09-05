@@ -10,6 +10,62 @@
 uint32_t *frames;
 uint32_t nframes;
 
+page_directory_t* clone_directory(page_directory_t* src){
+    uint32_t phys;
+
+    page_directory_t* dir = (page_directory_t*)kmalloc_ap(sizeof(page_directory_t), &phys);
+    memset(dir, 0, sizeof(page_directory_t));
+
+    uint32_t offset = (uint32_t)dir->tables_phys - (uint32_t)dir;
+
+    dir->phys_addr = phys + offset;
+
+    uint32_t i;
+    for(i=0;i<1024;i++){
+        if(!src->tables[i]){
+            continue;
+        }
+
+        if(kernel_dir->tables[i]==src->tables[i]){
+            // we're in the kernel directory
+            dir->tables[i] = src->tables[i];
+            dir->tables_phys[i] = src->tables_phys[i];
+        } else {
+            // we're in userland, copy the table instead of linking it
+            uint32_t phys;
+            dir->tables[i] = clone_table(src->tables[i], &phys);
+            dir->tables_phys[i] = phys | 0x07;
+        }
+    }
+
+    return dir;
+}
+
+extern void copy_page_phys(void* src, void* dest);
+
+page_table_t* clone_table(page_table_t* src, uint32_t* phys){
+    page_table_t* tbl = (page_table_t*)kmalloc_ap(sizeof(page_table_t), phys);
+    memset(tbl, 0, sizeof(page_table_t));
+
+    uint32_t i;
+    for(i=0;i<1024;i++){
+        if(!src->pages[i].frame){
+            continue;
+        }
+
+        alloc_frame(&tbl->pages[i], 0, 0);
+
+        tbl->pages[i].present = src->pages[i].present;
+        tbl->pages[i].write = src->pages[i].write;
+        tbl->pages[i].user = src->pages[i].user;
+        tbl->pages[i].accessed = src->pages[i].accessed;
+        tbl->pages[i].dirty = src->pages[i].dirty;
+
+        copy_page_phys(src->pages[i].frame * 0x1000, tbl->pages[i].frame);
+    }
+    return tbl;
+}
+
 uint32_t next_page(){
     int i, n, lim;
     n = nframes/32;

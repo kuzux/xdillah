@@ -225,7 +225,7 @@ void init_opts(printf_options_t* opts){
     opts->minwidth = 0;
 
     // used for floating point precision and int minimum width to be printed
-    opts->precision = -1;
+    opts->precision = 1;
 
     // the actual length modifier character. H for hh, m for ll
     opts->lengthmod = '\0';
@@ -259,10 +259,7 @@ int put_pad(char* str, printf_options_t opts){
     }
 }
 
-int printf(const char* restrict fmt, ...){
-    va_list params;
-    va_start(params, fmt);
-
+int vprintf(const char* fmt, va_list params){
     printf_options_t opts;
     init_opts(&opts);
 
@@ -293,8 +290,6 @@ int printf(const char* restrict fmt, ...){
         ASSERT(*fmt == '%');
         fmt++;
 
-        if(*fmt=='\0') break;
-
         // parse the optional flags
         switch(*fmt){
             case '-':
@@ -321,6 +316,8 @@ int printf(const char* restrict fmt, ...){
                 break;
         }
 
+        if(*fmt=='\0') break;
+
         // parse the minwidth
         if(*fmt == '*'){
             n = (int)va_arg(params, int);
@@ -328,12 +325,14 @@ int printf(const char* restrict fmt, ...){
             fmt++;
             goto precision_parse;
         }
+        if(*fmt=='\0') break;
         while(isdigit(*fmt)){
             opts.minwidth *= 10;
             opts.minwidth += (*fmt-'0');
             fmt++;
         }
         precision_parse:
+        if(*fmt=='\0') break;
 
         // parse the precision.
         // it is .* or .n where n is a number
@@ -346,6 +345,7 @@ int printf(const char* restrict fmt, ...){
                 goto length_parse;
             }
 
+            if(*fmt=='\0') break;
             while(isdigit(*fmt)){
                 opts.precision *= 10;
                 opts.precision += (*fmt-'0');
@@ -353,6 +353,7 @@ int printf(const char* restrict fmt, ...){
             }
         }
         length_parse:
+        if(*fmt=='\0') break;
 
         // parse the length character
         switch(*fmt){
@@ -384,6 +385,8 @@ int printf(const char* restrict fmt, ...){
             default:
                 break;
         }
+        
+        if(*fmt=='\0') break;
 
         opts.format = *fmt;
         fmt++;
@@ -449,6 +452,16 @@ int printf(const char* restrict fmt, ...){
                 break;
         }
     }
+
+    return res;
+}
+
+int printf(const char* fmt, ...){
+    va_list params;
+    va_start(params, fmt);
+
+    size_t res = 0;
+    res = vprintf(fmt, params);
 
     va_end(params);
 

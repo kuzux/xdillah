@@ -33,6 +33,9 @@ typedef struct page_directory {
 page_directory_t *curr_dir;
 page_directory_t *kernel_dir;
 
+page_directory_t* clone_directory(page_directory_t* src);
+page_table_t* clone_table(page_table_t* src, uint32_t* phys);
+
 // memory size in kbytes;
 void paging_init(uint32_t memsize);
 void switch_page_directory(page_directory_t *dir);
