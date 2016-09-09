@@ -6,6 +6,18 @@
 #include <kernel/serial.h>
 #endif
 
+typedef struct printf_options{
+    uint8_t justify;
+    uint8_t sign;
+    uint8_t space;
+    uint8_t alternative;
+    char padchar;
+    int minwidth;
+    int precision;
+    char lengthmod;
+    char format;
+} printf_options_t;
+
 void sp(const char* restrict s){
     #if defined(__is_xdillah_kernel)
         puts_serial(s, COM1);
@@ -35,7 +47,7 @@ int puts(const char* s){
     return res;
 }
 
-void putdec(uint32_t n, char* buf){
+void putdec(uint32_t n, char* buf, printf_options_t opts){
     if (n == 0){
         buf[0] = '0';
         return;
@@ -45,6 +57,9 @@ void putdec(uint32_t n, char* buf){
 
     if(n<0){
         buf[idx] = '-';
+        idx++;
+    } else if(opts.sign&&n>0) {
+        buf[idx] = '+';
         idx++;
     }
 
@@ -66,7 +81,7 @@ void putdec(uint32_t n, char* buf){
     }
 }
 
-void putoct(uint32_t n, char* buf){
+void putoct(uint32_t n, char* buf, printf_options_t opts){
     if (n == 0){
         buf[0] = '0';
         return;
@@ -76,6 +91,9 @@ void putoct(uint32_t n, char* buf){
 
     if(n<0){
         buf[idx] = '-';
+        idx++;
+    } else if(opts.sign&&n>0) {
+        buf[idx] = '+';
         idx++;
     }
 
@@ -99,12 +117,15 @@ void putoct(uint32_t n, char* buf){
     }
 }
 
-void puthex(uint32_t n, char* buf){
+void puthex(uint32_t n, char* buf, printf_options_t opts){
     int32_t tmp;
     uint32_t idx = 0;
 
     if(n<0){
         buf[idx] = '-';
+        idx++;
+    } else if(opts.sign&&n>0) {
+        buf[idx] = '+';
         idx++;
     }
 
@@ -145,12 +166,15 @@ void puthex(uint32_t n, char* buf){
     }
 }
 
-void puthex_caps(uint32_t n, char* buf){
+void puthex_caps(uint32_t n, char* buf, printf_options_t opts){
     int32_t tmp;
     uint32_t idx = 0;
 
     if(n<0){
         buf[idx] = '-';
+        idx++;
+    } else if(opts.sign&&n>0) {
+        buf[idx] = '+';
         idx++;
     }
 
@@ -190,18 +214,6 @@ void puthex_caps(uint32_t n, char* buf){
         idx++;
     }
 }
-
-typedef struct printf_options{
-    uint8_t justify;
-    uint8_t sign;
-    uint8_t space;
-    uint8_t alternative;
-    char padchar;
-    int minwidth;
-    int precision;
-    char lengthmod;
-    char format;
-} printf_options_t;
 
 void init_opts(printf_options_t* opts){
     // 0 = right justified, 1 = left justified
@@ -259,6 +271,15 @@ int put_pad(char* str, printf_options_t opts){
     }
 }
 
+#define PRINTF_INT(var, type, fn) var = (type)va_arg(params, type); \
+    fn(var, numbuf, opts); \
+    res += put_pad(numbuf, opts); \
+    break;
+
+#define PRINTF_LEN(var, type) (var) = (type*)va_arg(params, type*); \
+    *(var) = res; \
+    break;
+
 int vprintf(const char* fmt, va_list params){
     printf_options_t opts;
     init_opts(&opts);
@@ -269,8 +290,29 @@ int vprintf(const char* fmt, va_list params){
     char c;
     const char* s;
     void* vp;
-    int* ip;
     unsigned int u;
+
+    short sh;
+    long l;
+    long long ll;
+    intmax_t im;
+    size_t sz;
+    ptrdiff_t pd;
+
+    unsigned char uc;
+    unsigned short ush;
+    unsigned long ul;
+    unsigned long long ull;
+    uintmax_t uim;
+
+    int* ip;
+    char* cp;
+    short* shp;
+    long* lp;
+    long long* llp;
+    intmax_t* imp;
+    size_t* szp;
+    ptrdiff_t* pdp;
 
     char numbuf[255];
     uint32_t i;
@@ -400,33 +442,108 @@ int vprintf(const char* fmt, va_list params){
                 break;
             case 'd':
             case 'i':
-                n = (int)va_arg(params, int);
-                putdec(n, numbuf);
-                res += put_pad(numbuf, opts);
+                switch(opts.lengthmod){
+                    case 'H':
+                    PRINTF_INT(c, char, putdec)
+                    case 'h':
+                    PRINTF_INT(sh, short, putdec)
+                    case 'l':
+                    PRINTF_INT(l, long, putdec)
+                    case 'm':
+                    PRINTF_INT(ll, long long, putdec)
+                    case 'j':
+                    PRINTF_INT(im, intmax_t, putdec)
+                    case 'z':
+                    PRINTF_INT(sz, size_t, putdec)
+                    case 't':
+                    PRINTF_INT(pd, ptrdiff_t, putdec)
+                    default:
+                    PRINTF_INT(n, int, putdec)
+                }
 
                 break;
             case 'u':
-                u = (unsigned int)va_arg(params, unsigned int);
-                putdec(u, numbuf);
-                res += put_pad(numbuf, opts);
+                switch(opts.lengthmod){
+                    case 'H':
+                    PRINTF_INT(uc, unsigned char, putdec)
+                    case 'h':
+                    PRINTF_INT(ush, unsigned short, putdec)
+                    case 'l':
+                    PRINTF_INT(ul, unsigned long, putdec)
+                    case 'm':
+                    PRINTF_INT(ull, unsigned long long, putdec)
+                    case 'j':
+                    PRINTF_INT(uim, uintmax_t, putdec)
+                    case 'z':
+                    PRINTF_INT(sz, size_t, putdec)
+                    case 't':
+                    PRINTF_INT(pd, ptrdiff_t, putdec)
+                    default:
+                    PRINTF_INT(u, unsigned int, putdec)
+                }
 
                 break;
             case 'x':
-                u = (unsigned int)va_arg(params, unsigned int);
-                puthex(u, numbuf);
-                res += put_pad(numbuf, opts);
+                switch(opts.lengthmod){
+                    case 'H':
+                    PRINTF_INT(uc, unsigned char, puthex)
+                    case 'h':
+                    PRINTF_INT(ush, unsigned short, puthex)
+                    case 'l':
+                    PRINTF_INT(ul, unsigned long, puthex)
+                    case 'm':
+                    PRINTF_INT(ull, unsigned long long, puthex)
+                    case 'j':
+                    PRINTF_INT(uim, uintmax_t, puthex)
+                    case 'z':
+                    PRINTF_INT(sz, size_t, puthex)
+                    case 't':
+                    PRINTF_INT(pd, ptrdiff_t, puthex)
+                    default:
+                    PRINTF_INT(u, unsigned int, puthex)
+                }
 
                 break;
             case 'X':
-                u = (unsigned int)va_arg(params, unsigned int);
-                puthex_caps(u, numbuf);
-                res += put_pad(numbuf, opts);
+                switch(opts.lengthmod){
+                    case 'H':
+                    PRINTF_INT(uc, unsigned char, puthex_caps)
+                    case 'h':
+                    PRINTF_INT(ush, unsigned short, puthex_caps)
+                    case 'l':
+                    PRINTF_INT(ul, unsigned long, puthex_caps)
+                    case 'm':
+                    PRINTF_INT(ull, unsigned long long, puthex_caps)
+                    case 'j':
+                    PRINTF_INT(uim, uintmax_t, puthex_caps)
+                    case 'z':
+                    PRINTF_INT(sz, size_t, puthex_caps)
+                    case 't':
+                    PRINTF_INT(pd, ptrdiff_t, puthex_caps)
+                    default:
+                    PRINTF_INT(u, unsigned int, puthex_caps)
+                }
 
                 break;
             case 'o':
-                u = (unsigned int)va_arg(params, unsigned int);
-                putoct(u, numbuf);
-                res += put_pad(numbuf, opts);
+                switch(opts.lengthmod){
+                    case 'H':
+                    PRINTF_INT(uc, unsigned char, putoct)
+                    case 'h':
+                    PRINTF_INT(ush, unsigned short, putoct)
+                    case 'l':
+                    PRINTF_INT(ul, unsigned long, putoct)
+                    case 'm':
+                    PRINTF_INT(ull, unsigned long long, putoct)
+                    case 'j':
+                    PRINTF_INT(uim, uintmax_t, putoct)
+                    case 'z':
+                    PRINTF_INT(sz, size_t, putoct)
+                    case 't':
+                    PRINTF_INT(pd, ptrdiff_t, putoct)
+                    default:
+                    PRINTF_INT(u, unsigned int, putoct)
+                }
 
                 break;
             case 's':
@@ -436,13 +553,29 @@ int vprintf(const char* fmt, va_list params){
                 break;
             case 'p':
                 vp = (void*)va_arg(params, void*);
-                puthex((uint32_t)vp, numbuf);
+                puthex((uint32_t)vp, numbuf, opts);
                 res += put_pad(numbuf, opts);
 
                 break;
             case 'n':
-                ip = (int*)va_arg(params, int*);
-                *ip = res;
+                switch(opts.lengthmod){
+                    case 'H':
+                    PRINTF_LEN(cp, char*)
+                    case 'h':
+                    PRINTF_LEN(shp, short*)
+                    case 'l':
+                    PRINTF_LEN(lp, long*)
+                    case 'm':
+                    PRINTF_LEN(llp, long long*)
+                    case 'j':
+                    PRINTF_LEN(imp, intmax_t*)
+                    case 'z':
+                    PRINTF_LEN(szp, size_t*)
+                    case 't':
+                    PRINTF_LEN(pdp, ptrdiff_t*)
+                    default:
+                    PRINTF_LEN(ip, int*)
+                }
 
                 break;
             default:

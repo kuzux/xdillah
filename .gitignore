@@ -3,3 +3,4 @@ initrd_contents
 initrd.txt
 initrd.img
 *.dump
+.vscode
