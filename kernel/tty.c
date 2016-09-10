@@ -3,6 +3,14 @@
 #include <stdbool.h>
 #include <kernel/ioprim.h>
 
+/**
+ * This function contains the routines to draw a text-mode output to the monitor
+ * or the emulator window. VGA basically uses memory-mapped IO to display
+ * text output. The functions in this file modify that buffer. We'll need to 
+ * add some separate buffering later to implement multiple terminals or a
+ * Graphical Interface.
+**/
+
 size_t tty_row;
 size_t tty_column;
 uint8_t tty_color;

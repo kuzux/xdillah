@@ -1,5 +1,12 @@
 #include <kernel/serial.h>
 
+/** 
+ * This file defines helper functions to use the serial port(read/write to it), 
+ * and a routine to initialize a serial port. The serial port is currently only 
+ * used for debugging, as it is connected to qemu's stdout, but might come in handy 
+ * in the future. 
+**/
+
 // http://wiki.osdev.org/Serial_ports was super useful
 
 void serial_init(int port){

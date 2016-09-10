@@ -1,6 +1,12 @@
 #include <kernel/kheap.h>
 #include <stdlib.h>
 #include <stdio.h>
+/**
+ * This file implements the functions needed to modify the heap of processes
+ * and some that directly modify the memory used by the kernel (before or
+ * after the initisalization of the heap). Maybe we should really split that 
+ * into 2 files, one for generic heaps and one specifically for kernel heap. 
+**/
 
 // curr_dir (used in expand/contract) is defined at paging.h
 heap_t* kheap;

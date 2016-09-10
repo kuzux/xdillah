@@ -5,13 +5,17 @@
 #include <kernel/isr.h>
 #include <kernel/tty.h>
 
+/**
+ * This file defines functions related to the CPU clock, the helper
+ * function simply reads the number of clock ticks. The initialize
+ * function calculates the divisor via the given frequency and registers 
+ * an interrupt handler that simply increments the tick count. 
+**/
+
 uint32_t tick = 0;
 
 static void timer_cb(){
     tick++;
-
-    //tty_putdec(tick);
-    //tty_putch('\n');
 }
 
 void timer_init(uint32_t freq){

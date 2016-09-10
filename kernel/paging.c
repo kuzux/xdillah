@@ -7,6 +7,17 @@
 #include <stdlib.h>
 #include <kernel/isr.h>
 
+/** This file defines a bunch of helper functions and initializers
+ * regarding page tables and directories. The helpers generally 
+ * deal with page frames and allocating/deallocating them and
+ * the initializer basically allocates pages for the memory used by
+ * the kernel. The page fault handler just prints out the location  
+ * of the fault and then panics. For more detailed info see the 
+ * paging section of JamesM tutorial. 
+**/
+
+// bitmap whether the page frames in the memory are empty
+// or full
 uint32_t *frames;
 uint32_t nframes;
 

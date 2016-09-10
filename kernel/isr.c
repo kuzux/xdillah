@@ -1,6 +1,12 @@
 #include <kernel/isr.h>
 #include <kernel/tty.h>
 #include <kernel/ioprim.h>
+/**
+ * this file defines the default interrupt handlers, which check
+ * if there are any custom interrupt handlers for that routine,
+ * and run that if it exists. See the idt section of JamesM's 
+ * tutorial if you need more info.
+**/
 
 isr_t handlers[256];
 

@@ -17,6 +17,11 @@
 #include <stdlib.h>
 #include <assert.h>
 
+/** This file simply contains the kmain function, which prints a header,
+ * initializes a bunch of stuff, then runs d\some test routines. Really simple to 
+ * understand. 
+**/
+
 void print_header(){
     printf("Booting xdillah version %s \n", XDILLAH_VERSION);
     printf("Compiled at %s on %s \n", XDILLAH_COMPILE_DATE, XDILLAH_COMPILE_ENV);
