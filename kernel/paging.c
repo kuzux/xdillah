@@ -150,14 +150,17 @@ void paging_init(uint32_t memsize){
         acc += 0x1000;
     }
 
-    for (i = KHEAP_START; i < KHEAP_START+HEAP_INITIAL_SIZE; i += 0x1000)
+    for (i = KHEAP_START; i < KHEAP_START+HEAP_INITIAL_SIZE; i += 0x1000){
         alloc_frame(get_page(i, 1, kernel_dir), 0, 0);
+    }
 
     register_interrupt_handler(0xe, page_fault);
 
     switch_page_directory(kernel_dir);
 
     kheap = make_heap(KHEAP_START, KHEAP_START+HEAP_INITIAL_SIZE, 0xCFFFF000, 0, 0);
+    curr_dir = clone_directory(kernel_dir);
+    switch_page_directory(curr_dir);
 }
 
 void switch_page_directory(page_directory_t* dir){

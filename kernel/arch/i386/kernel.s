@@ -35,6 +35,7 @@ _start:
     call kearly
     call _init
 
+    push esp ;; load the initial stack pointer
     push ebx ;; load the multiboot header
     call kmain
 
