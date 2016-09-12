@@ -1,6 +1,7 @@
 #include <kernel/tasking.h>
 #include <kernel/paging.h>
 #include <kernel/kheap.h>
+#include <stdio.h>
 
 //currently running task
 volatile task_t* currtask;
@@ -11,7 +12,7 @@ volatile task_t* ready_q;
 // those are defined in paging.c
 extern void alloc_frame(page_t*,int,int);
 extern uint32_t read_eip();
-extern _taskswitch(uint32_t, uint32_t, uint32_t, uint32_t);
+extern _taskswitch(uint32_t, uint32_t);
 
 uint32_t nextpid = 1;
 
@@ -62,10 +63,14 @@ void taskswitch(){
     esp = currtask->esp;
     ebp = currtask->ebp;
 
-    _taskswitch(eip, curr_dir->tables_phys, ebp, esp);
+    printf("%x \n", eip);
+
+    _taskswitch(eip, curr_dir->tables_phys);
 }
 
 int do_fork(){
+    asm volatile("cli");
+
     task_t* parent = currtask; 
 
     page_directory_t* dir = clone_directory(curr_dir);
@@ -87,9 +92,10 @@ int do_fork(){
     tmp->next = newtask;
 
     uint32_t eip = read_eip();
-    
+
     if(currtask==parent){
         // We are the parent, so set up the esp/ebp/eip for our child.
+        
         uint32_t esp, ebp; 
         asm volatile("mov %%esp, %0" : "=r"(esp));
         asm volatile("mov %%ebp, %0" : "=r"(ebp));
@@ -97,6 +103,10 @@ int do_fork(){
         newtask->esp = esp;
         newtask->ebp = ebp;
         newtask->eip = eip;
+
+        printf("%x %x %x \n", esp, ebp, eip);
+
+        asm volatile("sti");
     } else {
         return 0;
     }

@@ -37,9 +37,9 @@ int parse_elf(fs_node_t* file, elf_header_t* header, elf_ph_t* pht, elf_sh_t* sh
     ASSERT(header->magic==ELF_MAGIC);
 
     // assume we have only one program header
-    printf("t:%x o:%x v:%x p:%x f:%x m:%x flags:%x a:%x \n", pht[0].type, pht[0].offset,
-           pht[0].vaddr, pht[0].paddr, pht[0].filesz, pht[0].memsz,
-           pht[0].flags, pht[0].align);
+    //printf("t:%x o:%x v:%x p:%x f:%x m:%x flags:%x a:%x \n", pht[0].type, pht[0].offset,
+    //       pht[0].vaddr, pht[0].paddr, pht[0].filesz, pht[0].memsz,
+    //       pht[0].flags, pht[0].align);
 
     /* fetch the names into a string buffer. Shouldn't be more than a few hundred
      * bytes long */
@@ -48,7 +48,7 @@ int parse_elf(fs_node_t* file, elf_header_t* header, elf_ph_t* pht, elf_sh_t* sh
 
     uint32_t i;
     for(i=0;i<header->shnum;i++){
-        printf("%s %d %x %x %x %x \n", (namesbuf+sht[i].name), sht[i].type, sht[i].flags, sht[i].address, sht[i].offset, sht[i].size);
+        //printf("%s %d %x %x %x %x \n", (namesbuf+sht[i].name), sht[i].type, sht[i].flags, sht[i].address, sht[i].offset, sht[i].size);
     }
 
     return 0; // success

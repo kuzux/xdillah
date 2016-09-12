@@ -14,8 +14,12 @@
 
 uint32_t tick = 0;
 
+// defined in tasking.c
+extern void taskswitch();
+
 static void timer_cb(){
     tick++;
+    taskswitch();
 }
 
 void timer_init(uint32_t freq){
