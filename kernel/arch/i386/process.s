@@ -1,4 +1,6 @@
 global copy_page_phys
+global read_eip
+global _taskswitch
 
 copy_page_phys:
     push ebx 
@@ -34,3 +36,18 @@ copy_page_phys:
     popf
     pop ebx
     ret
+
+read_eip:
+    pop eax
+    jmp eax
+
+_taskswitch:
+    cli
+    mov ecx, [esp+4]
+    mov eax, [esp+8]
+    mov ebp, [esp+12]
+    mov esp, [esp+16]
+    mov cr3, eax
+    mov eax, 0x12345
+    sti
+    jmp ecx

@@ -1,6 +1,7 @@
 #ifndef _TASKING_H
 #define _TASKING_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <kernel/paging.h>
 
