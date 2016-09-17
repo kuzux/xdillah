@@ -152,6 +152,7 @@ void kmain(multiboot_info_t *mbd, uint32_t init_stack){
     elf_ph_t* pht;
     elf_sh_t* sht;
     parse_elf(elf_test, header, pht, sht);
+    printf("%s \n", "elf test done");
 
     // multitasking test
     int res = do_fork();

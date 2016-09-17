@@ -23,7 +23,6 @@ typedef struct fs_node* (*finddir_type_t)(struct fs_node*, char*);
 
 typedef struct fs_node{
     // various properties of the file
-    char name[128];  // filename
     uint32_t mask;   // permissions mask
     uint32_t uid;    // owner user
     uint32_t gid;    // owner group
@@ -31,7 +30,18 @@ typedef struct fs_node{
     uint32_t inode;  // provides a way for the fs to identify the file
     uint32_t length; // length of the file in bytes
     uint32_t impl;   // An implementation defined number
+    struct fs_node *ptr; // used by symlinks and mount points
 
+    // direct pointers
+    // 12 direct block pointers
+    // indirect points to an array of 4 blocks
+    // double indirect points to an array of 4 pointer structures
+    // triple indirect points to an array of 4 double pointer structures
+    uint32_t direct_blocks[12];
+    uint32_t** indirect;
+    uint32_t*** dbl_indirect;
+    uint32_t**** triple_indirect;
+    
     // various functions relating to the file 
     read_type_t read;
     write_type_t write;
@@ -40,7 +50,6 @@ typedef struct fs_node{
     readdir_type_t readdir;
     finddir_type_t finddir; // find a child file by name
 
-    struct fs_node *ptr; // used by symlinks and mount points
 } fs_node_t;
 
 struct dirent{

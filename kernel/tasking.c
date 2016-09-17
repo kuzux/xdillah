@@ -63,8 +63,6 @@ void taskswitch(){
     esp = currtask->esp;
     ebp = currtask->ebp;
 
-    printf("%x \n", eip);
-
     _taskswitch(eip, curr_dir->tables_phys);
 }
 
@@ -103,8 +101,6 @@ int do_fork(){
         newtask->esp = esp;
         newtask->ebp = ebp;
         newtask->eip = eip;
-
-        printf("%x %x %x \n", esp, ebp, eip);
 
         asm volatile("sti");
     } else {
