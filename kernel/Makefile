@@ -51,6 +51,7 @@ fs.o \
 initrd.o \
 elf.o \
 tasking.o \
+tss.o \
 
 CRTI_OBJ:=$(ARCHDIR)/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)

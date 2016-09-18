@@ -1,6 +1,7 @@
 global copy_page_phys
 global read_eip
 global _taskswitch
+global _usermode 
 
 copy_page_phys:
     push ebx 
@@ -57,3 +58,19 @@ _taskswitch:
     ; that is like the whole promise of multitasking
     ret
     jmp ecx
+
+_usermode:
+    cli
+    mov ax, 0x23
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+
+    mov eax, esp
+    push 0x23
+    push eax
+    pushf
+    push 0x1b
+    push usermode1
+    iret
+usermode1:

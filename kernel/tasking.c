@@ -13,6 +13,7 @@ volatile task_t* ready_q;
 extern void alloc_frame(page_t*,int,int);
 extern uint32_t read_eip();
 extern _taskswitch(uint32_t, uint32_t);
+extern void _usermode();
 
 uint32_t nextpid = 1;
 
@@ -110,4 +111,9 @@ int do_fork(){
 
 int do_getpid(){
     return currtask->pid;
+}
+
+void usermode(){
+    // todo: deal with the kernel stack
+    _usermode();
 }
