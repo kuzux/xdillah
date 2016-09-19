@@ -155,7 +155,7 @@ void kmain(multiboot_info_t *mbd, uint32_t init_stack){
     printf("%s \n", "elf test done");
 
     // multitasking test
-    //int res = do_fork();
+    int res = do_fork();
 
     /*if(res!=0){
         printf("%s \n", "parent");

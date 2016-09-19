@@ -36,5 +36,5 @@ void gdt_init(){
     gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // user mode data segment
 
     gdt_flush((uint32_t)&gdt_ptr);
-    tss_flush();
+    //tss_flush();
 }

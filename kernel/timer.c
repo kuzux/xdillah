@@ -19,7 +19,7 @@ extern void taskswitch();
 
 static void timer_cb(){
     tick++;
-    //taskswitch();
+    taskswitch();
 }
 
 void timer_init(uint32_t freq){

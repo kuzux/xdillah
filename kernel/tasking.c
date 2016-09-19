@@ -12,7 +12,7 @@ volatile task_t* ready_q;
 // those are defined in paging.c
 extern void alloc_frame(page_t*,int,int);
 extern uint32_t read_eip();
-extern _taskswitch(uint32_t, uint32_t);
+extern void _taskswitch(uint32_t, uint32_t);
 extern void _usermode();
 
 uint32_t nextpid = 1;
