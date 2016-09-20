@@ -15,6 +15,7 @@
 #include <kernel/elf.h>
 #include <kernel/config.h>
 #include <kernel/tasking.h>
+#include <kernel/amfs.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
