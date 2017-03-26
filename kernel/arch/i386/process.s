@@ -54,7 +54,6 @@ _taskswitch:
     sti
     ; jumping to the new eip is also currently broken
     ; that is like the whole promise of multitasking
-    ret
     jmp ecx
 
 _usermode:

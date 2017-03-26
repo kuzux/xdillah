@@ -28,11 +28,14 @@ void tasking_init(){
     currtask->next = 0;
 }
 
-void taskswitch(){    
+void taskswitch(){
     // not initialized tasking yet
     if(!currtask){ 
         return;
     }
+
+    static int tscount = 0;
+    tscount++;
 
     uint32_t esp, ebp, eip;
     asm volatile("mov %%esp, %0" : "=r"(esp));
@@ -52,7 +55,8 @@ void taskswitch(){
         return;
     }
 
-    printf("curr %d %x %x %x \n", currtask->pid, eip, esp, ebp);
+    if(tscount<10)
+        printf("curr %d %x %x %x \n", currtask->pid, eip, esp, ebp);
 
     // save the previous values
     currtask->eip = eip;
@@ -68,7 +72,8 @@ void taskswitch(){
     esp = currtask->esp;
     ebp = currtask->ebp;
 
-    printf("new %d %x %x %x \n", currtask->pid, eip, esp, ebp);
+    if(tscount<10)
+        printf("new %d %x %x %x \n", currtask->pid, eip, esp, ebp);
 
     _taskswitch(eip, curr_dir->tables_phys, esp, ebp);
 }
@@ -76,7 +81,7 @@ void taskswitch(){
 int do_fork(){
     asm volatile("cli");
 
-    task_t* parent = currtask; 
+    task_t* parent = currtask;
 
     // defined in paging.h
     page_directory_t* dir = clone_directory(curr_dir);
@@ -112,7 +117,15 @@ int do_fork(){
 
         asm volatile("sti");
     } else {
+        // seemingly we get into that if but can't return
+        //printf("%s \n", "forked");
+
+        // so, here's an oddity; shouldn't both of these lines do literally the exact same thing?
+        // the c version pagefaults and the asm version resets the emulator
+
         return 0;
+
+        asm("movl $0x0, %eax; ret");
     }
 }
 

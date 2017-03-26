@@ -139,7 +139,7 @@ void kmain(multiboot_info_t *mbd, uint32_t init_stack){
         printf("%s \n", "fatal error: no initrd");
         abort(__FILE__, __LINE__);
     }
-    
+
     fs_node_t* elf_test = fs_root->finddir(fs_root, "initrd_contents/elf_test");
 
     elf_header_t* header;
@@ -150,14 +150,15 @@ void kmain(multiboot_info_t *mbd, uint32_t init_stack){
 
     // multitasking test
     int res = do_fork();
-
-    /*if(res!=0){
+    
+    if(res!=0){
         printf("%s \n", "parent");
     } else {
         printf("%s \n", "child");
-    }*/
-
-    for(;;);
+    }
+    
+    for(;;) {
+    }
     
     return;
 }
