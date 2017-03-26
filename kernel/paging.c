@@ -21,6 +21,7 @@
 uint32_t *frames;
 uint32_t nframes;
 
+// called in paging_init and do_fork
 page_directory_t* clone_directory(page_directory_t* src){
     uint32_t phys;
 
@@ -57,6 +58,8 @@ extern void copy_page_phys(void* src, void* dest);
 page_table_t* clone_table(page_table_t* src, uint32_t* phys){
     page_table_t* tbl = (page_table_t*)kmalloc_ap(sizeof(page_table_t), phys);
     memset(tbl, 0, sizeof(page_table_t));
+
+    printf("%s \n", "clonetbl");
 
     uint32_t i;
     for(i=0;i<1024;i++){

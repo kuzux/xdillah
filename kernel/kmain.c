@@ -139,14 +139,7 @@ void kmain(multiboot_info_t *mbd, uint32_t init_stack){
         printf("%s \n", "fatal error: no initrd");
         abort(__FILE__, __LINE__);
     }
-
-/*  char test[11];
-    fs_node_t* test_txt = fs_root->finddir(fs_root, "initrd_contents/test.txt");
-    test_txt->read(test_txt, 0, 10, test);
-    test[10] = '\0';
-    printf("%s \n", test);
-*/
-
+    
     fs_node_t* elf_test = fs_root->finddir(fs_root, "initrd_contents/elf_test");
 
     elf_header_t* header;

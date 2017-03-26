@@ -12,7 +12,7 @@ volatile task_t* ready_q;
 // those are defined in paging.c
 extern void alloc_frame(page_t*,int,int);
 extern uint32_t read_eip();
-extern void _taskswitch(uint32_t, uint32_t);
+extern void _taskswitch(uint32_t, uint32_t, uint32_t, uint32_t);
 extern void _usermode();
 
 uint32_t nextpid = 1;
@@ -24,11 +24,11 @@ void tasking_init(){
     currtask->pid = nextpid++;
     currtask->esp = currtask->ebp = 0;
     currtask->eip = 0;
-    currtask->pagedir = curr_dir;
+    currtask->pagedir = curr_dir; // defined in paging.h
     currtask->next = 0;
 }
 
-void taskswitch(){
+void taskswitch(){    
     // not initialized tasking yet
     if(!currtask){ 
         return;
@@ -40,10 +40,19 @@ void taskswitch(){
 
     eip = read_eip();
 
-    // just performed a task switch
-    if(eip == 0x12345){
+    task_t* newtask = currtask->next;
+
+    // restart at the beginning if we followed a null link
+    if(!newtask) {
+        newtask = ready_q;
+    }
+
+    // bail if we've just performed a task switch
+    if(currtask->pid == newtask->pid) {
         return;
     }
+
+    printf("curr %d %x %x %x \n", currtask->pid, eip, esp, ebp);
 
     // save the previous values
     currtask->eip = eip;
@@ -51,12 +60,7 @@ void taskswitch(){
     currtask->ebp = ebp;
 
     // perform the actual task switching
-    currtask = currtask->next;
-
-    // restart at the beginning if we followed a null link
-    if(!currtask){
-        currtask = ready_q;
-    }
+    currtask = newtask;
 
     curr_dir = currtask->pagedir;
 
@@ -64,7 +68,9 @@ void taskswitch(){
     esp = currtask->esp;
     ebp = currtask->ebp;
 
-    _taskswitch(eip, curr_dir->tables_phys);
+    printf("new %d %x %x %x \n", currtask->pid, eip, esp, ebp);
+
+    _taskswitch(eip, curr_dir->tables_phys, esp, ebp);
 }
 
 int do_fork(){
@@ -72,6 +78,7 @@ int do_fork(){
 
     task_t* parent = currtask; 
 
+    // defined in paging.h
     page_directory_t* dir = clone_directory(curr_dir);
 
     // initialize the new task

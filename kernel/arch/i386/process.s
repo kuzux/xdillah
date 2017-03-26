@@ -42,17 +42,15 @@ read_eip:
     pop eax
     jmp eax
 
-
 _taskswitch:
     cli
     mov ecx, [esp+4]    ; eip
     mov eax, [esp+8]    ; physical address of current directory
-    ; temporarily disable stack moving, nut we'll need to do that soon
+    ; temporarily disable stack moving, but we'll need to do that soon
     ; maybe we should have the kernel stack identity mapped?
-    ; mov ebp, [esp+12]   ; ebp
-    ; mov esp, [esp+16]   ; esp
+    ; mov esp, [esp+12]   ; esp
+    mov ebp, [esp+16]   ; ebp
     mov cr3, eax        ; set the page directory
-    mov eax, 0x12345    ; magic number to detect a task switch
     sti
     ; jumping to the new eip is also currently broken
     ; that is like the whole promise of multitasking
