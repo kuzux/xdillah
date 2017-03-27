@@ -50,7 +50,7 @@ void stack_init(uint32_t init_esp, void* start, uint32_t sz){
     for(i=(uint32_t)start;i>=(uint32_t)start-sz;i-=0x1000){
         alloc_frame(get_page(i,1,curr_dir), 1, 1);
     }
-
+    
     // Flush the TLB by reading and writing the page directory address again.
     uint32_t pd_addr;
     asm volatile("mov %%cr3, %0" : "=r" (pd_addr));
@@ -65,10 +65,11 @@ void stack_init(uint32_t init_esp, void* start, uint32_t sz){
     uint32_t new_stack_pointer = old_stack_pointer + offset;
     uint32_t new_base_pointer  = old_base_pointer + offset;
 
-    printf("%x %x %x \n", old_stack_pointer, old_base_pointer, offset);
+    //printf("%x %x %x \n", old_stack_pointer, old_base_pointer, offset);
     
-    memcpy(start, (void*)old_stack_pointer, init_esp-old_stack_pointer);
+    memcpy(start, (void*)old_stack_pointer, (void*)(init_esp-old_stack_pointer);
 
+    /*
     for(i = (uint32_t)start; i > (uint32_t)start-sz; i -= 4){
         uint32_t tmp = *(uint32_t*)i;
         // If the value of tmp is inside the range of the old stack, assume it is a base pointer
@@ -86,7 +87,8 @@ void stack_init(uint32_t init_esp, void* start, uint32_t sz){
     }
 
     printf("%x %x \n", new_stack_pointer, new_base_pointer);
-    
+    */
+
     // Change to the new stack.
     asm volatile("mov %0, %%esp" : : "r" (new_stack_pointer));
     asm volatile("mov %0, %%ebp" : : "r" (new_base_pointer));
@@ -94,7 +96,6 @@ void stack_init(uint32_t init_esp, void* start, uint32_t sz){
 
 void kmain(multiboot_info_t *mbd, uint32_t init_stack){
     //don't use that after we init paging
-
     int modcount = mbd->mods_count;
 
     uint32_t initrd_start, initrd_end;
@@ -122,7 +123,8 @@ void kmain(multiboot_info_t *mbd, uint32_t init_stack){
     paging_init(mbd->mem_upper*1024);
 
     printf("%s \n", "paging done");
-    
+
+    // do this first before we populate the stack with pointers to stack values
     // that doesn't work atm.
     // osdev.org also thinks that it's pretty bad
     //stack_init(init_stack, KERNEL_STACK_START, KERNEL_STACK_SIZE);
@@ -156,7 +158,7 @@ void kmain(multiboot_info_t *mbd, uint32_t init_stack){
     } else {
         printf("%s \n", "child");
     }
-    
+
     for(;;) {
     }
     

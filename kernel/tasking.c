@@ -1,6 +1,7 @@
 #include <kernel/tasking.h>
 #include <kernel/paging.h>
 #include <kernel/kheap.h>
+#include <kernel/timer.h>
 #include <stdio.h>
 
 //currently running task
@@ -16,6 +17,7 @@ extern void _taskswitch(uint32_t, uint32_t, uint32_t, uint32_t);
 extern void _usermode();
 
 uint32_t nextpid = 1;
+uint32_t prev_switch_time = 0;
 
 void tasking_init(){
     currtask = ready_q = (task_t*)kmalloc(sizeof(task_t));
@@ -43,16 +45,21 @@ void taskswitch(){
 
     eip = read_eip();
 
+    // check if we recently did a task switch
+    if(prev_switch_time) {
+        int newtime = timer_get_tick();
+        if(newtime==prev_switch_time) { 
+            return;
+        } else {
+            prev_switch_time = newtime;
+        }
+    }
+
     task_t* newtask = currtask->next;
 
     // restart at the beginning if we followed a null link
     if(!newtask) {
         newtask = ready_q;
-    }
-
-    // bail if we've just performed a task switch
-    if(currtask->pid == newtask->pid) {
-        return;
     }
 
     if(tscount<10)
@@ -122,6 +129,10 @@ int do_fork(){
 
         // so, here's an oddity; shouldn't both of these lines do literally the exact same thing?
         // the c version pagefaults and the asm version resets the emulator
+
+        // is the return call pagefaulting due to the stack changing after the jump?
+        // then why does the 'ret' instruction behave differently?
+        // we probably need to copy the entire stack on fork
 
         return 0;
 
